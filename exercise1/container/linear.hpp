@@ -142,10 +142,9 @@ public:
 protected:
 
   // Auxiliary member functions
+  void QuickSort(unsigned long p, unsigned long q) noexcept;
 
-  // QuickSort
-  // Partition
-
+  unsigned long Partition(unsigned long p, unsigned long q) noexcept;
 };
 
 /* ************************************************************************** */
