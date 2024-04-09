@@ -14,39 +14,52 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class Vector {
-  // Must extend ResizableContainer,
-  //             LinearContainer<Data>
+class Vector: virtual public ResizableContainer, virtual public LinearContainer<Data> {
 
 private:
 
-  // ...
-
 protected:
 
-  // using Container::???;
+  using Container::size;
 
-  // ...
+  Data = Elements = nullptr;
 
 public:
 
   // Default constructor
-  // Vector() specifiers;
+  Vector() : Elements(nullptr), size(0) {}
 
   /* ************************************************************************ */
 
   // Specific constructors
-  // Vector(argument) specifiers; // A vector with a given initial dimension
-  // Vector(argument) specifiers; // A vector obtained from a TraversableContainer
-  // Vector(argument) specifiers; // A vector obtained from a MappableContainer
+  
+  // A vector with a given initial dimension
+  explicit Vector(const unsigned long newsize) : Elements(new Data[newsize]), size(newsize) {}
+  
+  // A vector obtained from a TraversableContainer
+  explicit Vector(const TraversableContainer<Data>& tc) : Elements(new Data[tc.Size()]), size(tc.Size()) {}
+  
+  // A vector obtained from a MappableContainer
+  explicit Vector(const MappableContainer<Data>& mc) : Elements(new Data[mc.Size()]), size(mc.Size()) {}
 
   /* ************************************************************************ */
 
   // Copy constructor
-  // Vector(argument) specifiers;
+  Vector(const Vector<Data>& original) : Elements(nullptr), size(original.size) {
+    if (size > 0) {
+      Elements = new Data[size];
+      std::copy(original.Elements, original.Elements + size, Elements);
+      }
+  }
 
   // Move constructor
   // Vector(argument) specifiers;
+  Vector(Vector<Data>&& original) : Elements(nullptr), size(original.size) {
+    if (size > 0) {
+      Elements = new Data[size];
+      std::move(original.Elements, original.Elements + size, Elements);
+    }
+  }
 
   /* ************************************************************************ */
 

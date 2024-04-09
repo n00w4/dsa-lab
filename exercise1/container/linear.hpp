@@ -20,7 +20,7 @@ private:
 
 protected:
   
-  using Container::Size;
+  using Container::size;
 
 public:
 
