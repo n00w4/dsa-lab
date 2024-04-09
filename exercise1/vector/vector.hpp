@@ -53,7 +53,6 @@ public:
   }
 
   // Move constructor
-  // Vector(argument) specifiers;
   Vector(Vector<Data>&& original) : Elements(nullptr), size(original.size) {
     if (size > 0) {
       Elements = new Data[size];
@@ -131,62 +130,64 @@ public:
 
   // Override (Mutable) LinearContainer member (must throw std::length_error when empty)
   Data& Back() override;
-
-protected:
-
-  // Auxiliary functions, if necessary!
-
 };
 
 /* ************************************************************************** */
 
 template <typename Data>
-class SortableVector {
-  // Must extend Vector<Data>,
-  //             SortableLinearContainer<Data>
+class SortableVector: virtual public Vector<Data>, virtual public SortableLinearContainer<Data> {
 
 private:
 
-  // ...
-
 protected:
 
-  // using Container::???;
+  using Container::size;
 
-  // ...
+  Data = Elements = nullptr;
 
 public:
 
   // Default constructor
-  // SortableVector() specifiers;
+  SortableVector() = default;
 
   /* ************************************************************************ */
 
   // Specific constructors
-  // SortableVector(argument) specifiers; // A vector with a given initial dimension
-  // SortableVector(argument) specifiers; // A vector obtained from a TraversableContainer
-  // SortableVector(argument) specifiers; // A vector obtained from a MappableContainer
+  // A vector with a given initial dimension
+  explicit SortableVector(const unsigned long newsize) : Vector<Data>(newsize) {}
+  
+  // A vector obtained from a TraversableContainer
+  explicit SortableVector(const TraversableContainer<Data>& tc) : Vector<Data>(tc) {}
+
+  // A vector obtained from a MappableContainer
+  explicit SortableVector(const MappableContainer<Data>& mc) : Vector<Data>(mc) {}
 
   /* ************************************************************************ */
 
   // Copy constructor
-  // SortableVector(argument) specifiers;
+  SortableVector(const SortableVector<Data>& other) : Vector<Data>(other) {}
 
   // Move constructor
-  // SortableVector(argument) specifiers;
+  SortableVector(SortableVector<Data>&& other) noexcept : Vector<Data>(std::move(other)) {}
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~SortableVector() specifiers;
+  ~SortableVector() override = default;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument) specifiers;
+  SortableVector& operator=(const SortableVector& other) {
+    Vector<Data>::operator=(other);
+    return *this;
+  }
 
   // Move assignment
-  // type operator=(argument) specifiers;
+  SortableVector& operator=(SortableVector&& other) noexcept {
+    Vector<Data>::operator=(std::move(other));
+    return *this;
+  }
 
 protected:
 
