@@ -64,46 +64,73 @@ public:
   /* ************************************************************************ */
 
   // Destructor
-  // ~Vector() specifiers;
+  ~Vector() {
+    delete[] Elements;
+  }
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument) specifiers;
+  Vector<Data>& operator=(const Vector<Data>& original) {
+    if (this != &original) {
+      delete[] Elements;
+
+      size = original.size;
+      Elements = new Data[size];
+      std::copy(original.Elements, original.Elements + size, Elements);
+    }
+
+    return *this;
+  }
 
   // Move assignment
-  // type operator=(argument) specifiers;
+  Vector<Data>& operator=(Vector<Data>&& original) {
+    if (this != &original) {
+      delete[] Elements;
+
+      size = original.size;
+      Elements = new Data[size];
+      std::move(original.Elements, original.Elements + size, Elements);
+    }
+  }
 
   /* ************************************************************************ */
 
   // Comparison operators
-  // type operator==(argument) specifiers;
-  // type operator!=(argument) specifiers;
+  bool operator=(const Vector&) const noexcept;
+  bool operator!=(const Vector&) const noexcept;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from ClearableContainer)
-
-  // type Clear() specifiers; // Override ClearableContainer member
+  void Clear() override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from ResizableContainer)
-
-  // type Resize(argument) specifiers; // Override ResizableContainer member
+  void Resize(const unsigned long) override;
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from LinearContainer)
 
-  // type operator[](argument) specifiers; // Override (NonMutable) LinearContainer member (must throw std::out_of_range when out of range)
-  // type operator[](argument) specifiers; // Override (Mutable) LinearContainer member (must throw std::out_of_range when out of range)
+  // Override (NonMutable) LinearContainer member (must throw std::out_of_range when out of range)
+  const Data& operator[](const unsigned long) const override;
+  
+  // Override (Mutable) LinearContainer member (must throw std::out_of_range when out of range)
+  Data& operator[](const unsigned long) override;
 
-  // type Front() specifiers; // Override (NonMutable) LinearContainer member (must throw std::length_error when empty)
-  // type Front() specifiers; // Override (Mutable) LinearContainer member (must throw std::length_error when empty)
+  // Override (NonMutable) LinearContainer member (must throw std::length_error when empty)
+  const Data& Front() const override;
+  
+  // Override (Mutable) LinearContainer member (must throw std::length_error when empty)
+  Data& Front() override;
 
-  // type Back() specifiers; // Override (NonMutable) LinearContainer member (must throw std::length_error when empty)
-  // type Back() specifiers; // Override (Mutable) LinearContainer member (must throw std::length_error when empty)
+  // Override (NonMutable) LinearContainer member (must throw std::length_error when empty)
+  const Data& Back() const override;
+
+  // Override (Mutable) LinearContainer member (must throw std::length_error when empty)
+  Data& Back() override;
 
 protected:
 

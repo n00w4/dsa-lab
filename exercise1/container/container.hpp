@@ -98,7 +98,7 @@ public:
   /* ************************************************************************ */
 
   // Specific member functions
-  virtual void Resize(unsigned long) = 0;
+  virtual void Resize(const unsigned long) = 0;
 
   /* ************************************************************************ */
 
