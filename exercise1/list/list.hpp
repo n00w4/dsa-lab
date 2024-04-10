@@ -15,94 +15,98 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class List {
-  // Must extend ClearableContainer,
-  //             LinearContainer<Data>,
-  //             DictionaryContainer<Data>
+class List: virtual public ClearableContainer, virtual public LinearContainer<Data>
+            virtual public DictionaryContainer<Data> {
 
 private:
 
-  // ...
-
 protected:
 
-  // using Container::???;
+  using Container::size;
 
   struct Node {
 
-    // Data
-    // ...
+    Data element;
+    Data * next = nullptr; 
 
     /* ********************************************************************** */
 
+    // Default constructor
+    Node() = default;
+
     // Specific constructors
-    // ...
+    Node(const Data& data) : element(data) {};
+    Node(Data&&) noexcept;
 
     /* ********************************************************************** */
 
     // Copy constructor
-    // ...
+    Node(const Node& node) : element(node.element) {};
 
     // Move constructor
-    // ...
+    Node(Node&& node) noexcept; 
 
     /* ********************************************************************** */
 
     // Destructor
-    // ...
+    ~Node() = default;
 
     /* ********************************************************************** */
 
     // Comparison operators
-    // ...
+    bool operator==(const Node&) const noexcept;
+    bool operator!=(const Node&) const noexcept;
 
     /* ********************************************************************** */
 
     // Specific member functions
-
-    // ...
+    virtual Node* Clone(Node*)
 
   };
 
-  // ...
+  Node* head = nullptr;
+  Node* tail = nullptr;
 
 public:
 
   // Default constructor
-  // List() specifiers;
+  List() = default;
 
   /* ************************************************************************ */
 
   // Specific constructor
-  // List(argument) specifiers; // A list obtained from a TraversableContainer
-  // List(argument) specifiers; // A list obtained from a MappableContainer
+  // A list obtained from a TraversableContainer
+  List(const TraversableContainer<Data>&);
+
+  // A list obtained from a MappableContainer
+  List(MappableContainer<Data>&&);
 
   /* ************************************************************************ */
 
   // Copy constructor
-  // List(argument) specifiers;
+  List(const List<Data>&);
 
   // Move constructor
-  // List(argument) specifiers;
+  List(List<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~List() specifiers;
+  virtual ~List();
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument) specifiers;
+  List& operator=(const List<Data>&);
 
   // Move assignment
-  // type operator=(argument) specifiers;
+  List& operator=(List<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  // type operator==(argument) specifiers;
-  // type operator!=(argument) specifiers;
+  bool operator==(const List&) const noexcept;
+  bool operator!=(const List&) const noexcept;
 
   /* ************************************************************************ */
 
