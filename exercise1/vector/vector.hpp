@@ -27,77 +27,49 @@ protected:
 public:
 
   // Default constructor
-  Vector() : Elements(nullptr), size(0) {}
+  Vector() = default;
 
   /* ************************************************************************ */
 
   // Specific constructors
   
   // A vector with a given initial dimension
-  explicit Vector(const unsigned long newsize) : Elements(new Data[newsize]), size(newsize) {}
+  Vector(const unsigned long);
   
   // A vector obtained from a TraversableContainer
-  explicit Vector(const TraversableContainer<Data>& tc) : Elements(new Data[tc.Size()]), size(tc.Size()) {}
+  Vector(const TraversableContainer<Data>&);
   
   // A vector obtained from a MappableContainer
-  explicit Vector(const MappableContainer<Data>& mc) : Elements(new Data[mc.Size()]), size(mc.Size()) {}
+  Vector(MappableContainer<Data>&&);
 
   /* ************************************************************************ */
 
   // Copy constructor
-  Vector(const Vector<Data>& original) : Elements(nullptr), size(original.size) {
-    if (size > 0) {
-      Elements = new Data[size];
-      std::copy(original.Elements, original.Elements + size, Elements);
-      }
-  }
+  Vector(const Vector<Data>&);
 
   // Move constructor
-  Vector(Vector<Data>&& original) : Elements(nullptr), size(original.size) {
-    if (size > 0) {
-      Elements = new Data[size];
-      std::move(original.Elements, original.Elements + size, Elements);
-    }
-  }
+  Vector(Vector<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  ~Vector() {
+  virtual ~Vector() {
     delete[] Elements;
   }
 
   /* ************************************************************************ */
 
   // Copy assignment
-  Vector<Data>& operator=(const Vector<Data>& original) {
-    if (this != &original) {
-      delete[] Elements;
-
-      size = original.size;
-      Elements = new Data[size];
-      std::copy(original.Elements, original.Elements + size, Elements);
-    }
-
-    return *this;
-  }
+  Vector<Data>& operator=(const Vector<Data>&);
 
   // Move assignment
-  Vector<Data>& operator=(Vector<Data>&& original) {
-    if (this != &original) {
-      delete[] Elements;
-
-      size = original.size;
-      Elements = new Data[size];
-      std::move(original.Elements, original.Elements + size, Elements);
-    }
-  }
+  Vector<Data>& operator=(Vector<Data>&&);
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator=(const Vector&) const noexcept;
-  bool operator!=(const Vector&) const noexcept;
+  bool operator==(const Vector<Data>&) const noexcept;
+  inline bool operator!=(const Vector<Data>&) const noexcept;
 
   /* ************************************************************************ */
 
@@ -154,21 +126,21 @@ public:
 
   // Specific constructors
   // A vector with a given initial dimension
-  explicit SortableVector(const unsigned long newsize) : Vector<Data>(newsize) {}
+  SortableVector(const unsigned long);
   
   // A vector obtained from a TraversableContainer
-  explicit SortableVector(const TraversableContainer<Data>& tc) : Vector<Data>(tc) {}
+  SortableVector(const TraversableContainer<Data>&);
 
   // A vector obtained from a MappableContainer
-  explicit SortableVector(const MappableContainer<Data>& mc) : Vector<Data>(mc) {}
+  SortableVector(MappableContainer<Data>&&);
 
   /* ************************************************************************ */
 
   // Copy constructor
-  SortableVector(const SortableVector<Data>& other) : Vector<Data>(other) {}
+  SortableVector(const SortableVector<Data>&);
 
   // Move constructor
-  SortableVector(SortableVector<Data>&& other) noexcept : Vector<Data>(std::move(other)) {}
+  SortableVector(SortableVector<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -178,16 +150,10 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  SortableVector& operator=(const SortableVector& other) {
-    Vector<Data>::operator=(other);
-    return *this;
-  }
+  SortableVector& operator=(const SortableVector&);
 
   // Move assignment
-  SortableVector& operator=(SortableVector&& other) noexcept {
-    Vector<Data>::operator=(std::move(other));
-    return *this;
-  }
+  SortableVector& operator=(SortableVector&&) noexcept;
 
 protected:
 
