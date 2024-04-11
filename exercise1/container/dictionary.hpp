@@ -42,31 +42,31 @@ public:
 
   // Specific member functions
 
-  // type Insert(argument) specifiers; // Copy of the value
+  // Copy of the value
   virtual bool Insert(const Data& data) = 0;
   
-  // type Insert(argument) specifiers; // Move of the value
+  // Insert(argument) specifiers; // Move of the value
   virtual bool Insert(Data&& data) = 0;
 
-  // type Remove(argument) specifiers;
+  // Remove(argument) specifiers;
   virtual bool Remove(const Data& data) = 0;
   
-  // type InsertAll(argument) specifiers; // Copy of the value; From TraversableContainer; True if all are inserted
+  // InsertAll(argument) specifiers; // Copy of the value; From TraversableContainer; True if all are inserted
   virtual bool InsertAll(const TraversableContainer<Data>&) = 0;
   
-  // type InsertAll(argument) specifiers; // Move of the value; From MappableContainer; True if all are inserted
+  // InsertAll(argument) specifiers; // Move of the value; From MappableContainer; True if all are inserted
   virtual bool InsertAll(MappableContainer<Data>&&) = 0;
   
-  // type RemoveAll(argument) specifiers; // From TraversableContainer; True if all are removed
+  // RemoveAll(argument) specifiers; // From TraversableContainer; True if all are removed
   virtual bool RemoveAll(const TraversableContainer<Data>&) = 0;
 
-  // type InsertSome(argument) specifiers; // Copy of the value; From TraversableContainer; True if some is inserted
+  // InsertSome(argument) specifiers; // Copy of the value; From TraversableContainer; True if some is inserted
   virtual bool InsertSome(const TraversableContainer<Data>&) = 0;
 
-  // type InsertSome(argument) specifiers; // Move of the value; From MappableContainer; True if some is inserted
+  // InsertSome(argument) specifiers; // Move of the value; From MappableContainer; True if some is inserted
   virtual bool InsertSome(MappableContainer<Data>&&) = 0;
 
-  // type RemoveSome(argument) specifiers; // From TraversableContainer; True if some is removed
+  // RemoveSome(argument) specifiers; // From TraversableContainer; True if some is removed
   virtual bool RemoveSome(const TraversableContainer<Data>&) = 0;
 };
 
