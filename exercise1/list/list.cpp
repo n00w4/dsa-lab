@@ -146,4 +146,98 @@ List& List::operator=(List<Data>&& list) noexcept {
     return *this; 
 }
 
+// List comparison operators
+template <typename Data>
+bool List<Data>::operator==(const List& list) const noexcept{
+    return (size == list.size) && ((head == nullptr && list.head == nullptr) || (head != nullptr && list.head != nullptr && *head == *list.head));
+}
+
+template <typename Data>
+bool List<Data>::operator!=(const List& list) const noexcept {
+    return !(*this == list);
+}
+
+// List specific member functions
+template <typename Data>
+void List<Data>::InsertAtFront(const Data& data) {
+    Node* newnode = new Node(data);
+    newnode->next = head;
+    head = newnode;
+    if (tail == nullptr) {
+        tail = head;
+    }
+    size++;
+}
+
+template <typename Data>
+void List<Data>::InsertAtFront(Data&& data) noexcept {
+    Node* newnode = new Node(std::move(data));
+    newnode->next = head;
+    head = newnode;
+    if (tail == nullptr) {
+        tail = head;
+    }
+    size++;
+}
+
+template <typename Data>
+void List<Data>::RemoveFromFront() {
+    if (head != nullptr) {
+        Node* front = head;
+        if (head == tail) {
+            head = tail = nullptr;
+        } else {
+            head = head->next;
+        }
+        size--;
+        front->next = nullptr;
+        delete front;
+    } else {
+        throw std::length_error("List is empty");
+    }
+}
+
+template <typename Data>
+Data List<Data>::FrontNRemove() {
+    if (head != nullptr) {
+        Node* temp = head;
+        if (head == tail) {
+            head = tail = nullptr;
+        } else {
+            head = head->next;
+        }
+        size--;
+        front->next = nullptr;
+        Data dataToReturn(std::move(front->element));
+        delete front;
+        return dataToReturn;
+    } else {
+        throw std::length_error("List is empty");
+    }
+}
+
+template <typename Data>
+void List<Data>::InsertAtBack(const Data& data) {
+    Node* newnode = new Node(data);
+    if (tail == nullptr) {
+        head = newnode;
+    } else {
+        tail->next = newnode;
+    }
+    tail = newnode;
+    size++;
+}
+
+template <typename Data>
+void List<Data>::InsertAtBack(Data&& data) noexcept {
+    Node* newnode = new Node(std::move(data));
+    if (tail == nullptr) {
+        head = newnode;
+    } else {
+        tail->next = newnode;
+    }
+    tail = newnode;
+    size++;
+}
+
 }
