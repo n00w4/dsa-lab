@@ -122,10 +122,8 @@ List<Data>& List<Data>::operator=(const List<Data>& list) {
                 } else {
                     // Copy remaining elements from 'list' to the current list
                     Node* currentDest = head;
-                    for (Node* currentSource = list.head; currentSource != nullptr; currentSource = currentSource->next) {
+                    for (Node* currentSource = list.head; currentSource != nullptr; currentSource = currentSource->next, tail = currentDest, currentDest = currentDest->next;) {
                         currentDest->element = currentSource->element; 
-                        tail = currentDest;
-                        currentDest = currentDest->next;
                     }
                     delete currentDest;
                     tail->next = nullptr;
@@ -156,6 +154,8 @@ template <typename Data>
 bool List<Data>::operator!=(const List& list) const noexcept {
     return !(*this == list);
 }
+
+/* ************************************************************************** */
 
 // List specific member functions
 template <typename Data>
@@ -238,6 +238,179 @@ void List<Data>::InsertAtBack(Data&& data) noexcept {
     }
     tail = newnode;
     size++;
+}
+
+/* ************************************************************************** */
+
+// Specific member function inherited from ClearableContainer
+template <typename Data>
+void List<Data>::Clear() {
+    delete head;
+    head = tail = nullptr;
+    size = 0;
+}
+
+// Specific member functions inherited from MappableContainer
+template <typename Data>
+bool List<Data>::Insert(const Data& data) {
+    for (Node* current = head; current != nullptr; current = current->next) {
+        if (current->element == data) {
+            return false;
+        }
+    }
+    InsertAtBack(data);
+    return true;
+}
+
+template <typename Data>
+bool List<Data>::Insert(Data&& data) {
+    for (Node* current = head; current != nullptr; current = current->next) {
+        if (current->element == data) {
+            return false;
+        }
+    }
+    InsertAtBack(std::move(data));
+    return true;
+}
+
+template <typename Data>
+bool List<Data>::Remove(const Data& data) {
+    for (Node* current = head; current != nullptr; current = current->next) {
+        if (current->element == data) {
+            RemoveFromFront();
+            return true;
+        }
+    }
+    return false;
+}
+
+// Specific member functions inherited from LinearContainer
+template <typename Data>
+const Data& List<Data>::operator[](const unsigned long index) const {
+    if (index < size) {
+        Node* current = head;
+        for (unsigned long i = 0; i < index; i++, current = current->next) {}
+        return current->element;
+    } else {
+        throw std::out_of_range("Index out of range");
+    }
+}
+
+template <typename Data>
+Data& List<Data>::operator[](const unsigned long index) {
+    if (index < size) {
+        Node* current = head;
+        for (unsigned long i = 0; i < index; i++, current = current->next) {}
+        return current->element;
+    } else {
+        throw std::out_of_range("Index out of range");
+    }
+}
+
+template <typename Data>
+const Data& List<Data>::Front() const {
+    if (head != nullptr) {
+        return head->element;
+    } else {
+        throw std::length_error("List is empty");
+    }
+}
+
+template <typename Data>
+Data& List<Data>::Front() {
+    if (head != nullptr) {
+        return head->element;
+    } else {
+        throw std::length_error("List is empty");
+    }
+}
+
+template <typename Data>
+const Data& List<Data>::Back() const {
+    if (tail != nullptr) {
+        return tail->element;
+    } else {
+        throw std::length_error("List is empty");
+    }
+}
+
+template <typename Data>
+Data& List<Data>::Back() {
+    if (tail != nullptr) { 
+        return tail->element;
+    } else {
+        throw std::length_error("List is empty");
+    }
+}
+
+// Specific member function inherited from TraversableContainer
+template <typename Data>
+void List<Data>::Traverse(TraverseFun travFun) {
+    PreOrderTraverse(travFun, head);
+}
+
+// Specific member function inherited from PreOrderTraversableContainer
+template <typename Data>
+void List<Data>::PreOrderTraverse(TraverseFun travFun) {
+    PreOrderTraverse(travFun, head);
+}
+
+// Specific member function inherited from PostOrderTraversableContainer
+template <typename Data>
+void List<Data>::PostOrderTraverse(TraverseFun travFun) {
+    PostOrderTraverse(travFun, head);
+}
+
+// Specific member function inherited from MappableContainer
+template <typename Data>
+void List<Data>::Map(MappableContainer<Data>::MapFun mapFun) {
+    PreOrderMap(mapFun, head);
+}
+
+// Specific member function inherited from PreOrderMappableContainer
+template <typename Data>
+void List<Data>::PreOrderMap(MappableContainer<Data>::MapFun mapFun) {
+    PreOrderMap(mapFun, head);
+}
+
+// Specific member function inherited from PostOrderMappableContainer
+template <typename Data>
+void List<Data>::PostOrderMap(MappableContainer<Data>::MapFun mapFun) {
+    PostOrderMap(mapFun, head);
+}
+
+/* ************************************************************************** */
+
+// Auxiliary functions (for TraversableContainer)
+template <typename Data>
+void List<Data>::PreOrderTraverse(TraverseFun travFun, Node* currentnode) const {
+    for(; currentnode != nullptr; currentnode = currentnode->next) {
+        travFun(currentnode->element);
+    }
+}
+
+template <typename Data>
+void List<Data>::PostOrderTraverse(TraverseFun travFun, Node* currentnode) const {
+    if (currentnode != nullptr) {
+        PostOrderTraverse(travFun, currentnode->next);
+        travFun(currentnode->element);
+    }
+}
+
+// Auxiliary functions (for MappableContainer)
+template <typename Data>
+void List<Data>::PreOrderMap(MappableContainer<Data>::MapFun mapFun, Node* currentnode) {
+    for(; currentnode != nullptr; currentnode = currentnode->next) {
+        mapFun(currentnode->element);
+    }
+}
+
+template <typename Data>
+void List<Data>::PostOrderMap(MappableContainer<Data>::MapFun mapFun, Node* currentnode) {
+    if (currentnode != nullptr) {
+        PostOrderMap(mapFun, currentnode->next);
+        mapFun(currentnode->element);
+    }
 }
 
 }

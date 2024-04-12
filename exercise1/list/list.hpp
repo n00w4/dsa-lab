@@ -152,10 +152,10 @@ public:
 
   // Specific member functions (inherited from LinearContainer)
 
-  // operator[](argument) specifiers; // Override (NonMutable) LinearContainer member (must throw std::out_of_range when out of range)
+  // operator[] specifiers; // Override (NonMutable) LinearContainer member (must throw std::out_of_range when out of range)
   const Data& operator[](const unsigned long) const override;
 
-  // operator[](argument) specifiers; // Override (Mutable) LinearContainer member (must throw std::out_of_range when out of range)
+  // operator[] specifiers; // Override (Mutable) LinearContainer member (must throw std::out_of_range when out of range)
   Data& operator[](const unsigned long) override;
   
   // Front() specifiers; // Override (NonMutable) LinearContainer member (must throw std::length_error when empty)
@@ -175,19 +175,19 @@ public:
   // Specific member function (inherited from TraversableContainer)
 
   using typename TraversableContainer<Data>::TraverseFun;
-  void Traverse(TraverseFun) override;
+  void Traverse(TraverseFun) const override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PreOrderTraversableContainer)
   
-  void PreOrderTraverse(TraverseFun) override;
+  void PreOrderTraverse(TraverseFun) const override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderTraversableContainer)
 
-  void PostOrderTraverse(TraverseFun) override;
+  void PostOrderTraverse(TraverseFun) const override;
 
   /* ************************************************************************ */
 
@@ -209,7 +209,13 @@ public:
 
 protected:
 
-  // Auxiliary functions, if necessary!
+  // Auxiliary functions for TraversableContainer
+  void PreOrderTraverse(TraverseFun, Node*) const;
+  void PostOrderTraverse(TraverseFun, Node*) const;
+
+  // Auxiliary functions for MappableContainer
+  void PreOrderMap(MapFun, Node*);
+  void PostOrderMap(MapFun, Node*);
 
 };
 
