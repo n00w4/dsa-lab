@@ -72,7 +72,7 @@ public:
   // Specific member functions (inherited from Queue)
 
   // Head() specifiers; // Override Queue member (non-mutable version; must throw std::length_error when empty)
-  Data& Head() const override;
+  const Data& Head() const override;
   
   // Head() specifiers; // Override Queue member (mutable version; must throw std::length_error when empty)
   Data& Head() override;
@@ -111,6 +111,8 @@ protected:
   // Auxiliary functions
   void Expand();
   void Reduce();
+
+  void Resize(unsigned long, unsigned long);
 
 };
 
