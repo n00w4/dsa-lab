@@ -17,7 +17,7 @@ protected:
   /* ************************************************************************ */
 
   // Default constructor
-  Container(unsigned long size) {};
+  Container() = default;
 
 public:
 

@@ -16,6 +16,17 @@ inline Accumulator TraversableContainer<Data>::Fold(FoldFun<Accumulator> foldFun
     return acc;
 }
 
+template <typename Data>
+inline bool TraversableContainer<Data>::Exists(const Data in) const noexcept {
+    bool exists = false;
+    Traverse(
+        [&in, &exists](const Data &data) {
+            exists |= (data == in);
+        }
+    )
+    return exists;
+}
+
 // PreOrderTraversableContainer implementations
 template <typename Data>
 template <typename Accumulator>
@@ -26,6 +37,11 @@ inline Accumulator PreOrderTraversableContainer<Data>::PreOrderFold(FoldFun<Accu
             acc = foldFunction(data, acc);
         });
     return acc;
+}
+
+template <typename Data>
+inline void PreOrderTraversableContainer<Data>::Traverse(TraverseFun traverseFunction) const {
+    PreOrderTraverse(traverseFunction);
 }
 
 // PostOrderTraversableContainer implementations
@@ -40,6 +56,11 @@ inline Accumulator PostOrderTraversableContainer<Data>::PostOrderFold(FoldFun<Ac
     return acc;
 }
 
+template <typename Data>
+inline void PostOrderTraversableContainer<Data>::Traverse(TraverseFun traverseFunction) const {
+    PostOrderTraverse(traverseFunction);
+}
+
 // InOrderTraversableContainer implementations
 template <typename Data>
 template <typename Accumulator>
@@ -52,6 +73,11 @@ inline Accumulator InOrderTraversableContainer<Data>::InOrderFold(FoldFun<Accumu
     return acc;
 }
 
+template <typename Data>
+inline void InOrderTraversableContainer<Data>::Traverse(TraverseFun traverseFunction) const {
+    InOrderTraverse(traverseFunction);
+}
+
 // BreadthTraversableContainer implementations
 template <typename Data>
 template <typename Accumulator>
@@ -62,6 +88,11 @@ inline Accumulator BreadthTraversableContainer<Data>::BreadthFold(FoldFun<Accumu
             acc = foldFunction(data, acc);
         });
     return acc;
+}
+
+template <typename Data>
+inline void BreadthTraversableContainer<Data>::Traverse(TraverseFun traverseFunction) const {
+    BreadthTraverse(traverseFunction);
 }
 
 /* ************************************************************************** */

@@ -52,19 +52,15 @@ public:
   virtual Data& operator[](unsigned long) = 0;
 
   // (non-mutable version; concrete function must throw std::length_error when empty)
-  template <typename Data>
   virtual const Data& Front() const;
 
   // (mutable version; concrete function must throw std::length_error when empty)
-  template <typename Data>
   virtual Data& Front();
 
   // (non-mutable version; concrete function must throw std::length_error when empty)
-  template <typename Data>
   virtual const Data& Back() const;
   
   // (mutable version; concrete function must throw std::length_error when empty)
-  template <typename Data>
   virtual Data& Back();
 
   /* ************************************************************************ */

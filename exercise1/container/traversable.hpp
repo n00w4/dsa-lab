@@ -37,15 +37,15 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const TraversableContainer&) const noexcept;
-  bool operator!=(const TraversableContainer&) const noexcept;
+  bool operator==(const TraversableContainer&) const noexcept = delete;
+  bool operator!=(const TraversableContainer&) const noexcept = delete;
 
   /* ************************************************************************ */
 
   // Specific member function
 
   using TraverseFun = std::function<void(const Data &)>;
-  virtual void Traverse(TraverseFun) noexcept = 0;
+  virtual void Traverse(TraverseFun) const = 0;
 
 
   template <typename Accumulator>
@@ -57,7 +57,7 @@ public:
   /* ************************************************************************ */
 
   // Specific member function (inherited from TestableContainer)
-  bool Exists(Data) override = 0;
+  bool Exists(Data) const noexcept override;
 };
 
 /* ************************************************************************** */
@@ -85,14 +85,15 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const PreOrderMappableContainer&) const noexcept;
-  bool operator!=(const PreOrderMappableContainer&) const noexcept;
+  bool operator==(const PreOrderMappableContainer&) const noexcept = delete;
+  bool operator!=(const PreOrderMappableContainer&) const noexcept = delete;
+
   /* ************************************************************************ */
 
   // Specific member function
 
   using typename TraversableContainer<Data>::TraverseFun;
-  virtual void PreOrderTraverse(TraverseFun) noexcept = 0;
+  virtual void PreOrderTraverse(TraverseFun) const = 0;
 
 
   template <typename Accumulator>
@@ -104,7 +105,7 @@ public:
   /* ************************************************************************ */
 
   // Specific member function (inherited from TraversableContainer)
-  void Traverse(TraverseFun) override = 0;
+  void Traverse(TraverseFun) const override;
 };
 
 /* ************************************************************************** */
@@ -140,7 +141,7 @@ public:
   // Specific member function
 
   using typename TraversableContainer<Data>::TraverseFun;
-  virtual void PostOrderTraverse(TraverseFun) = 0;
+  virtual void PostOrderTraverse(TraverseFun) const = 0;
 
 
   template <typename Accumulator>
@@ -186,7 +187,7 @@ public:
 
   // Specific member function
   using typename TraversableContainer<Data>::TraverseFun;
-  virtual void InOrderTraverse(TraverseFun) = 0;
+  virtual void InOrderTraverse(TraverseFun) const = 0;
 
 
   template <typename Accumulator>
@@ -233,7 +234,7 @@ public:
 
   // Specific member function
   using typename TraversableContainer<Data>::TraverseFun;
-  virtual void BreadthTraverse(TraverseFun) = 0;
+  virtual void BreadthTraverse(TraverseFun) const = 0;
 
 
   template <typename Accumulator>

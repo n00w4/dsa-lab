@@ -159,16 +159,16 @@ public:
   Data& operator[](const unsigned long) override;
   
   // Front() specifiers; // Override (NonMutable) LinearContainer member (must throw std::length_error when empty)
-  const Data& Front() const override;
+  inline const Data& Front() const override;
   
   // Front() specifiers; // Override (Mutable) LinearContainer member (must throw std::length_error when empty)
-  Data& Front() override;
+  inline Data& Front() override;
   
   // Back() specifiers; // Override (NonMutable) LinearContainer member (must throw std::length_error when empty)
-  const Data& Back() const override;
+  inline const Data& Back() const override;
 
   // Back() specifiers; // Override (Mutable) LinearContainer member (must throw std::length_error when empty)
-  Data& Back() override;
+  inline Data& Back() override;
 
   /* ************************************************************************ */
 
