@@ -22,7 +22,7 @@ protected:
 
   using Container::size;
 
-  Data = Elements = nullptr;
+  Data* Elements = nullptr;
 
 public:
 
@@ -45,25 +45,23 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-  Vector(const Vector<Data>&);
+  Vector(const Vector&);
 
   // Move constructor
-  Vector(Vector<Data>&&) noexcept;
+  Vector(Vector&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  virtual ~Vector() {
-    delete[] Elements;
-  }
+  virtual ~Vector();
 
   /* ************************************************************************ */
 
   // Copy assignment
-  Vector<Data>& operator=(const Vector<Data>&);
+  Vector& operator=(const Vector&);
 
   // Move assignment
-  Vector<Data>& operator=(Vector<Data>&&);
+  Vector& operator=(Vector&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -115,7 +113,7 @@ protected:
 
   using Container::size;
 
-  Data = Elements = nullptr;
+  Data* Elements = nullptr;
 
 public:
 
@@ -137,15 +135,15 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-  SortableVector(const SortableVector<Data>&);
+  SortableVector(const SortableVector&);
 
   // Move constructor
-  SortableVector(SortableVector<Data>&&) noexcept;
+  SortableVector(SortableVector&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  ~SortableVector() override = default;
+  virtual ~SortableVector() = default;
 
   /* ************************************************************************ */
 

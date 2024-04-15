@@ -81,12 +81,12 @@ public:
   // Specific member function
 
   using typename MappableContainer<Data>::MapFun;
-  virtual void PreOrderMap(MapFun) = 0;
+  virtual void PreOrderMap(MapFun);
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
-  void Map(MapFun) override = 0;
+  void Map(MapFun) override;
 };
 
 /* ************************************************************************** */
@@ -123,12 +123,12 @@ public:
   // Specific member function
 
   using typename MappableContainer<Data>::MapFun;
-  virtual void PostOrderMap(MapFun) = 0;
+  virtual void PostOrderMap(MapFun);
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
-  void Map(MapFun) override = 0;
+  void Map(MapFun) override;
 };
 
 /* ************************************************************************** */
@@ -167,12 +167,12 @@ public:
   using typename MappableContainer<Data>::MapFun;
 
   // type InOrderMap(argument) specifiers;
-  void InOrderMap(MapFun) = 0;
+  virtual void InOrderMap(MapFun);
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
-  void Map(MapFun) override = 0;
+  void Map(MapFun) override;
 };
 
 /* ************************************************************************** */
@@ -208,12 +208,12 @@ public:
 
   // Specific member function
   using typename MappableContainer<Data>::MapFun;
-  void BreadthMap(MapFun) = 0;
+  virtual void BreadthMap(MapFun);
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
-  void Map(MapFun) override = 0;
+  void Map(MapFun) override;
 };
 
 /* ************************************************************************** */

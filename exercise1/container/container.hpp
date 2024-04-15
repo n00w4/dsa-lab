@@ -53,7 +53,7 @@ class ClearableContainer: virtual public Container {
 public:
 
   // Destructor
-  virtual ~ClearableContainer() override = default;
+  virtual ~ClearableContainer() = default;
 
   /* ************************************************************************ */
 
@@ -81,7 +81,7 @@ class ResizableContainer: virtual public ClearableContainer {
 public:
 
   // Destructor
-  virtual ~ResizableContainer() override = default;
+  virtual ~ResizableContainer() = default;
 
   /* ************************************************************************ */
 

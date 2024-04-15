@@ -15,7 +15,7 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class List: virtual public ClearableContainer, virtual public LinearContainer<Data>
+class List: virtual public ClearableContainer, virtual public LinearContainer<Data>,
             virtual public DictionaryContainer<Data> {
 
 private:
@@ -27,40 +27,40 @@ protected:
   struct Node {
 
     Data element;
-    Data * next = nullptr; 
+    Node* next = nullptr; 
 
     /* ********************************************************************** */
 
     // Default constructor
-    Node() = default;
+    inline Node() = default;
 
     // Specific constructors
-    Node(const Data& data) : element(data) {};
-    Node(Data&&) noexcept;
+    inline Node(const Data& data) : element(data) {};
+    inline Node(Data&&) noexcept;
 
     /* ********************************************************************** */
 
     // Copy constructor
-    Node(const Node& node) : element(node.element) {};
+    inline Node(const Node& node) : element(node.element) {};
 
     // Move constructor
-    Node(Node&& node) noexcept; 
+    inline Node(Node&& node) noexcept; 
 
     /* ********************************************************************** */
 
     // Destructor
-    ~Node() = default;
+    virtual ~Node();
 
     /* ********************************************************************** */
 
     // Comparison operators
     bool operator==(const Node&) const noexcept;
-    bool operator!=(const Node&) const noexcept;
+    inline bool operator!=(const Node&) const noexcept;
 
     /* ********************************************************************** */
 
     // Specific member functions
-    virtual Node* Clone(Node*)
+    virtual Node* Clone(Node*);
 
   };
 
@@ -84,10 +84,10 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-  List(const List<Data>&);
+  List(const List&);
 
   // Move constructor
-  List(List<Data>&&) noexcept;
+  List(List&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -97,16 +97,16 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  List& operator=(const List<Data>&);
+  List& operator=(const List&);
 
   // Move assignment
-  List& operator=(List<Data>&&) noexcept;
+  List& operator=(List&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const List&) const noexcept;
-  bool operator!=(const List&) const noexcept;
+  inline bool operator==(const List&) const noexcept;
+  inline bool operator!=(const List&) const noexcept;
 
   /* ************************************************************************ */
 
@@ -116,7 +116,7 @@ public:
   void InsertAtFront(const Data& data);
   
   // Move of the value
-  void InsertAtFront(Data&&) noexcept;
+  void InsertAtFront(Data&&);
   
   // (must throw std::length_error when empty)
   void RemoveFromFront();
@@ -128,7 +128,7 @@ public:
   void InsertAtBack(const Data& data);
 
   // Move of the value
-  void InsertAtBack(Data&&) noexcept;
+  void InsertAtBack(Data&&);
 
   /* ************************************************************************ */
 
@@ -159,16 +159,16 @@ public:
   Data& operator[](const unsigned long) override;
   
   // Front() specifiers; // Override (NonMutable) LinearContainer member (must throw std::length_error when empty)
-  inline const Data& Front() const override;
+  const Data& Front() const override;
   
   // Front() specifiers; // Override (Mutable) LinearContainer member (must throw std::length_error when empty)
-  inline Data& Front() override;
+  Data& Front() override;
   
   // Back() specifiers; // Override (NonMutable) LinearContainer member (must throw std::length_error when empty)
-  inline const Data& Back() const override;
+  const Data& Back() const override;
 
   // Back() specifiers; // Override (Mutable) LinearContainer member (must throw std::length_error when empty)
-  inline Data& Back() override;
+  Data& Back() override;
 
   /* ************************************************************************ */
 
@@ -210,8 +210,8 @@ public:
 protected:
 
   // Auxiliary functions for TraversableContainer
-  void PreOrderTraverse(TraverseFun, Node*) const;
-  void PostOrderTraverse(TraverseFun, Node*) const;
+  void PreOrderTraverse(TraverseFun, const Node*) const;
+  void PostOrderTraverse(TraverseFun, const Node*) const;
 
   // Auxiliary functions for MappableContainer
   void PreOrderMap(MapFun, Node*);

@@ -4,13 +4,13 @@ namespace lasd {
 /* ************************************************************************** */
 // Inherited from TraversableContainer
 template <typename Data>
-inline void LinearContainer<Data>::Traverse(TraverseFun travFun) {
+inline void LinearContainer<Data>::Traverse(TraverseFun travFun) const {
     PreOrderTraverse(travFun);
 }
 
 // Inherited from PreOrderTraversableContainer
 template <typename Data>
-inline void LinearContainer<Data>::PreOrderTraverse(TraverseFun travFun) {
+inline void LinearContainer<Data>::PreOrderTraverse(TraverseFun travFun) const {
     for (unsigned long index = 0; index < size; index++) {
         travFun(operator[](index));
     }
@@ -18,7 +18,7 @@ inline void LinearContainer<Data>::PreOrderTraverse(TraverseFun travFun) {
 
 // Inherited from PostOrderTraversableContainer
 template <typename Data>
-inline void LinearContainer<Data>::PostOrderTraverse(TraverseFun travFun) {
+inline void LinearContainer<Data>::PostOrderTraverse(TraverseFun travFun) const {
     for (unsigned long index = size; index > 0; index--) {
         travFun(operator[](index));
     }
@@ -27,7 +27,7 @@ inline void LinearContainer<Data>::PostOrderTraverse(TraverseFun travFun) {
 // Inherited from MappableContainer
 template <typename Data>
 inline void LinearContainer<Data>::Map(MapFun mapFun) {
-    PreOrderMap(mapFun)
+    PreOrderMap(mapFun);
 }
 
 // Inherited from PreOrderMappableContainer
@@ -48,22 +48,22 @@ inline void LinearContainer<Data>::PostOrderMap(MapFun mapFun) {
 
 // Specific member functions from LinearContainer
 template <typename Data>
-inline const Data& const LinearContainer::Front() const {
+inline const Data& LinearContainer<Data>::Front() const {
     return operator[](0);
 }
 
 template <typename Data>
-inline Data& LinearContainer::Front() {
+inline Data& LinearContainer<Data>::Front() {
     return operator[](0);
 }
 
 template <typename Data>
-inline const Data& LinearContainer::Back() const {
+inline const Data& LinearContainer<Data>::Back() const {
     return operator[](size-1);
 }
 
 template <typename Data>
-inline Data& LinearContainer::Back() {
+inline Data& LinearContainer<Data>::Back() {
     return operator[](size-1);
 }
 
@@ -71,13 +71,14 @@ inline Data& LinearContainer::Back() {
 
 // Specific member function from SortableContainer
 template <typename Data>
-inline void LinearContainer<Data>::Sort() noexcept {
+inline void SortableLinearContainer<Data>::Sort() noexcept {
     QuickSort(0, size-1);
 }
 
 // QuickSort implementation
 template <typename Data>
-inline void QuickSort(unsigned long p, unsigned long r) noexcept {
+inline void SortableLinearContainer<Data>::QuickSort(unsigned long p, unsigned long r) noexcept {
+    unsigned long q;
     if (p < r) {
         q = Partition(p,r);
         QuickSort(p, q);
@@ -87,7 +88,7 @@ inline void QuickSort(unsigned long p, unsigned long r) noexcept {
 
 // Partition implementation
 template <typename Data>
-inline unsigned long Partition(unsigned long p, unsigned long r) noexcept {
+inline unsigned long SortableLinearContainer<Data>::Partition(unsigned long p, unsigned long r) noexcept {
     Data pivot = operator[](p);
     unsigned long i = p - 1; // index to slide the structure to the left
     unsigned long j = r + 1; // index to slide the structure to the right

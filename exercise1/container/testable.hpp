@@ -13,7 +13,7 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class TestableContainer: virtual public Container<Data> {
+class TestableContainer: virtual public Container {
 
 private:
 

@@ -3,7 +3,7 @@ namespace lasd {
 
 /* ************************************************************************** */
 
-// Node specific constructors
+// Node specific constructor
 template <typename Data>
 List<Data>::Node::Node(Data&& data) noexcept {
     std::swap(element, data);
@@ -36,7 +36,7 @@ bool List<Data>::Node::operator!=(const Node& node) const noexcept {
 
 // Node specific member functions
 template <typename Data>
-Node* List<Data>::Node::Clone(Node* tail) {
+typename List<Data>::Node* List<Data>::Node::Clone(Node* tail) {
     if (next == nullptr) {
         return tail;
     } else {
@@ -54,8 +54,7 @@ List<Data>::List(const TraversableContainer<Data>& tc) {
     tc.Traverse(
         [this](const Data& data) {
             InsertAtBack(data);
-        }
-    )
+        });
 }
 
 template <typename Data>
@@ -63,8 +62,7 @@ List<Data>::List(MappableContainer<Data>&& mc) {
     mc.Map(
         [this](const Data& data) {
             InsertAtBack(std::move(data));
-        }
-    )
+        });
 }
 
 // List copy constructor
@@ -104,11 +102,9 @@ List<Data>& List<Data>::operator=(const List<Data>& list) {
         } else {
             // Copy elements from 'list' to the current list
             Node* currentSource = list.head;
-            for (Node* currentDest = head; currentDest != nullptr; currentDest = currentDest->next) {
+            for (Node* currentDest = head; currentDest != nullptr; currentDest = currentDest->next, currentSource = currentSource->next) {
                 currentDest->element = currentSource->element;
-                currentSource = currentSource->next;
             }
-
             // Add new nodes at the end of the current list, if necessary
             if (currentSource != nullptr) {
                 Node* newTail = new Node(*list.tail);
@@ -122,7 +118,7 @@ List<Data>& List<Data>::operator=(const List<Data>& list) {
                 } else {
                     // Copy remaining elements from 'list' to the current list
                     Node* currentDest = head;
-                    for (Node* currentSource = list.head; currentSource != nullptr; currentSource = currentSource->next, tail = currentDest, currentDest = currentDest->next;) {
+                    for (Node* currentSource = list.head; currentSource != nullptr; currentSource = currentSource->next, tail = currentDest, currentDest = currentDest->next) {
                         currentDest->element = currentSource->element; 
                     }
                     delete currentDest;
@@ -137,7 +133,8 @@ List<Data>& List<Data>::operator=(const List<Data>& list) {
 }
 
 // List move assignment
-List& List::operator=(List<Data>&& list) noexcept {
+template <typename Data>
+List<Data>& List<Data>::operator=(List<Data>&& list) noexcept {
     std::swap(tail, list.tail);
     std::swap(head, list.head);
     std::swap(size, list.size);
@@ -170,7 +167,7 @@ void List<Data>::InsertAtFront(const Data& data) {
 }
 
 template <typename Data>
-void List<Data>::InsertAtFront(Data&& data) noexcept {
+void List<Data>::InsertAtFront(Data&& data) {
     Node* newnode = new Node(std::move(data));
     newnode->next = head;
     head = newnode;
@@ -200,7 +197,7 @@ void List<Data>::RemoveFromFront() {
 template <typename Data>
 Data List<Data>::FrontNRemove() {
     if (head != nullptr) {
-        Node* temp = head;
+        Node* front = head;
         if (head == tail) {
             head = tail = nullptr;
         } else {
@@ -229,7 +226,7 @@ void List<Data>::InsertAtBack(const Data& data) {
 }
 
 template <typename Data>
-void List<Data>::InsertAtBack(Data&& data) noexcept {
+void List<Data>::InsertAtBack(Data&& data) {
     Node* newnode = new Node(std::move(data));
     if (tail == nullptr) {
         head = newnode;
@@ -345,19 +342,19 @@ Data& List<Data>::Back() {
 
 // Specific member function inherited from TraversableContainer
 template <typename Data>
-void List<Data>::Traverse(TraverseFun travFun) {
+void List<Data>::Traverse(TraverseFun travFun) const {
     PreOrderTraverse(travFun, head);
 }
 
 // Specific member function inherited from PreOrderTraversableContainer
 template <typename Data>
-void List<Data>::PreOrderTraverse(TraverseFun travFun) {
+void List<Data>::PreOrderTraverse(TraverseFun travFun) const {
     PreOrderTraverse(travFun, head);
 }
 
 // Specific member function inherited from PostOrderTraversableContainer
 template <typename Data>
-void List<Data>::PostOrderTraverse(TraverseFun travFun) {
+void List<Data>::PostOrderTraverse(TraverseFun travFun) const {
     PostOrderTraverse(travFun, head);
 }
 
@@ -383,14 +380,14 @@ void List<Data>::PostOrderMap(MappableContainer<Data>::MapFun mapFun) {
 
 // Auxiliary functions (for TraversableContainer)
 template <typename Data>
-void List<Data>::PreOrderTraverse(TraverseFun travFun, Node* currentnode) const {
+void List<Data>::PreOrderTraverse(TraverseFun travFun, const Node* currentnode) const {
     for(; currentnode != nullptr; currentnode = currentnode->next) {
         travFun(currentnode->element);
     }
 }
 
 template <typename Data>
-void List<Data>::PostOrderTraverse(TraverseFun travFun, Node* currentnode) const {
+void List<Data>::PostOrderTraverse(TraverseFun travFun, const Node* currentnode) const {
     if (currentnode != nullptr) {
         PostOrderTraverse(travFun, currentnode->next);
         travFun(currentnode->element);

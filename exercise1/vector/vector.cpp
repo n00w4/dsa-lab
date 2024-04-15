@@ -37,7 +37,7 @@ Vector<Data>::Vector(MappableContainer<Data>&& mc) : Vector(mc.Size()) {
 
 // Vector copy constructor
 template <typename Data>
-Vector<Data>::Vector(const Vector<Data>& vec) {
+Vector<Data>::Vector(const Vector& vec) {
    size = vec.size;
    Elements = new Data[size];
    std::copy(vec.Elements, vec.Elements + size, Elements);
@@ -45,7 +45,7 @@ Vector<Data>::Vector(const Vector<Data>& vec) {
 
 // Vector move constructor
 template <typename Data>
-Vector<Data>::Vector(Vector<Data>&& vec) noexcept {
+Vector<Data>::Vector(Vector&& vec) noexcept {
    std::swap(size, vec.size);
    std::swap(Elements, vec.Elements);
 }
@@ -58,8 +58,8 @@ Vector<Data>::~Vector() {
 
 // Vector copy assignment
 template <typename Data>
-Vector<Data>& Vector<Data>::operator=(const Vector<Data>& vec) {
-    Vector<Data> * tempvec = new Vector<Data>(vec);
+Vector<Data>& Vector<Data>::operator=(const Vector& vec) {
+    Vector<Data>* tempvec = new Vector<Data>(vec);
     std::swap(*tempvec, *this);
     delete tempvec;
     return *this;
@@ -67,9 +67,9 @@ Vector<Data>& Vector<Data>::operator=(const Vector<Data>& vec) {
 
 // Vector move assignment
 template <typename Data>
-Vector<Data>& Vector<Data>::operator=(Vector<Data>&& vec) noexcept {
-    Vector<Data> * tempvec = new Vector<Data>(vec);
-    std::move(*tempvec, *this);
+Vector<Data>& Vector<Data>::operator=(Vector&& vec) noexcept {
+    std::swap(size, vec.size);
+    std::swap(Elements, vec.Elements);
     return *this;
 }
 
@@ -100,9 +100,9 @@ void Vector<Data>::Clear() {
 template <typename Data>
 void Vector<Data>::Resize(const unsigned long newsize) {
     if (newsize == 0) {
-        Resize();
+        Clear();
     } else if (size != newsize) {
-        Data * Temp = new Data[newsize] {};
+        Data* Temp = new Data[newsize] {};
         unsigned long min = (size < newsize) ? size : newsize;
         for (unsigned long index = 0; index < min; index++) {
             std::swap(Elements[index], Temp[index]);
@@ -124,7 +124,7 @@ const Data& Vector<Data>::operator[](const unsigned long index) const {
 }
 
 template <typename Data>
-Data& Vector<Data>::operator[const unsigned long index] {
+Data& Vector<Data>::operator[](const unsigned long index) {
     if (index < size) {
         return Elements[index];
     } else {
@@ -173,35 +173,35 @@ Data& Vector<Data>::Back() {
 // Specific SortableVector constructors
 // A vector with a given initial dimension
 template <typename Data>
-SortableVector::SortableVector(const unsigned long newsize) : Vector<Data>(newsize) {}
+SortableVector<Data>::SortableVector(const unsigned long newsize) : Vector<Data>(newsize) {}
 
 // A vector obtained from a TraversableContainer
 template <typename Data>
-SortableVector::SortableVector(const TraversableContainer<Data>& tc) : Vector<Data>(tc.Size()) {}
+SortableVector<Data>::SortableVector(const TraversableContainer<Data>& tc) : Vector<Data>(tc.Size()) {}
 
 // A vector obtained from a MappableContainer
 template <typename Data>
-SortableVector::SortableVector(MappableContainer<Data>&& mc) : Vector<Data>(mc.Size()) {}
+SortableVector<Data>::SortableVector(MappableContainer<Data>&& mc) : Vector<Data>(mc.Size()) {}
 
 // SortableVector copy constructor
 template <typename Data>
-SortableVector::SortableVector(const SortableVector<Data>& sv) : Vector<Data>(sv) {}
+SortableVector<Data>::SortableVector(const SortableVector& sv) : Vector<Data>(sv) {}
 
 // SortableVector move constructor
 template <typename Data>
-SortableVector::SortableVector(SortableVector<Data>&& sv) noexcept : Vector<Data>(sv) {}
+SortableVector<Data>::SortableVector(SortableVector&& sv) noexcept : Vector<Data>(sv) {}
 
 // SortableVector copy assignment
 template <typename Data>
-SortableVector& SortableVector::operator=(const SortableVector& sv) {
+SortableVector<Data>& SortableVector<Data>::operator=(const SortableVector& sv) {
     Vector<Data>::operator=(sv);
     return *this;
 }
 
 // SortableVector move assignment
 template <typename Data>
-SortableVector& SortableVector::operator=(SortableVector&& sv) noexcept {
-    Vector<Data>::operator(std::move(sv));
+SortableVector<Data>& SortableVector<Data>::operator=(SortableVector&& sv) noexcept {
+    Vector<Data>::operator=(std::move(sv));
     return *this;
 }
 

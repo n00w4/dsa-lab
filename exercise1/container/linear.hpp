@@ -25,7 +25,7 @@ protected:
 public:
 
   // Destructor
-  ~LinearContainer() = default;
+  virtual ~LinearContainer() = default;
 
   /* ************************************************************************ */
 
@@ -52,50 +52,50 @@ public:
   virtual Data& operator[](unsigned long) = 0;
 
   // (non-mutable version; concrete function must throw std::length_error when empty)
-  virtual const Data& Front() const;
+  inline virtual const Data& Front() const;
 
   // (mutable version; concrete function must throw std::length_error when empty)
-  virtual Data& Front();
+  inline virtual Data& Front();
 
   // (non-mutable version; concrete function must throw std::length_error when empty)
-  virtual const Data& Back() const;
+  inline virtual const Data& Back() const;
   
   // (mutable version; concrete function must throw std::length_error when empty)
-  virtual Data& Back();
+  inline virtual Data& Back();
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from TraversableContainer)
 
   using typename TraversableContainer<Data>::TraverseFun;
-  virtual void Traverse(TraverseFun) override; 
+  inline void Traverse(TraverseFun) const override; 
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PreOrderTraversableContainer)
-  virtual void PreOrderTraverse(TraverseFun) override;
+  inline void PreOrderTraverse(TraverseFun) const override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderTraversableContainer)
-  virtual void PostOrderTraverse(TraverseFun) override;
+  inline void PostOrderTraverse(TraverseFun) const override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
 
   using typename MappableContainer<Data>::MapFun;
-  virtual void Map(MapFun) override;
+  inline void Map(MapFun) override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PreOrderMappableContainer)
-  virtual void PreOrderMap(MapFun) override;
+  inline void PreOrderMap(MapFun) override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderMappableContainer)
-  virtual void PostOrderMap(MapFun) override;
+  inline void PostOrderMap(MapFun) override;
 };
 
 /* ************************************************************************** */
@@ -107,7 +107,7 @@ private:
 
 protected:
 
-  using Container::Size;
+  using Container::size;
   using LinearContainer<Data>::operator[];
 
 public:
@@ -127,7 +127,7 @@ public:
 
   // Comparison operators
   bool operator==(const SortableLinearContainer&) const noexcept;
-  bool operaetor!=(const SortableLinearContainer&) const noexcept;
+  bool operator!=(const SortableLinearContainer&) const noexcept;
   
 
   /* ************************************************************************ */

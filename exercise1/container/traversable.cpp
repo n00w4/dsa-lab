@@ -22,8 +22,7 @@ inline bool TraversableContainer<Data>::Exists(const Data in) const noexcept {
     Traverse(
         [&in, &exists](const Data &data) {
             exists |= (data == in);
-        }
-    )
+        });
     return exists;
 }
 
