@@ -103,7 +103,7 @@ public:
   /* ************************************************************************ */
 
   // Specific member function (inherited from ClearableContainer)
-  virtual void Clear() override = 0;
+  virtual void Clear() override { Resize(0); };
 };
 
 /* ************************************************************************** */

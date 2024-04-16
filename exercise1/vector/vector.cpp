@@ -18,8 +18,7 @@ Vector<Data>::Vector(const TraversableContainer<Data>& tc) : Vector(tc.Size()) {
     tc.Traverse(
         [this, &index](const Data& data) {
             Elements[index++] = data;
-        }
-    );
+        });
 }
 
 // A vector obtained from a MappableContainer
@@ -29,8 +28,7 @@ Vector<Data>::Vector(MappableContainer<Data>&& mc) : Vector(mc.Size()) {
     mc.Map(
         [this, &index](const Data& data) {
             Elements[index++] = std::move(data);
-        }
-    );
+        });
 }
 
 /* ************************************************************************** */
