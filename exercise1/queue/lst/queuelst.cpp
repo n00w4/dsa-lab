@@ -5,7 +5,7 @@ namespace lasd {
 
 // Copy assignment
 template <typename Data>
-QueueLst<Data>& QueueLst<Data>::operator=(const QueueLst<Data>& queuelist) const noexcept {
+QueueLst<Data>& QueueLst<Data>::operator=(const QueueLst<Data>& queuelist) {
     List<Data>::operator=(queuelist);
     return *this;
 }
@@ -32,7 +32,7 @@ bool QueueLst<Data>::operator!=(const QueueLst<Data>& queuelist) const noexcept 
 
 // Specific member functions inherited from Queue
 template <typename Data>
-Data& QueueLst<Data>::Head() const {
+const Data& QueueLst<Data>::Head() const {
     return List<Data>::Front();
 }
 

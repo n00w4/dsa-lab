@@ -5,7 +5,7 @@ namespace lasd {
 
 // Copy assignment
 template <typename Data>
-StackLst<Data>& StackLst<Data>::operator=(const StackLst<Data>& stacklist) const noexcept {
+StackLst<Data>& StackLst<Data>::operator=(const StackLst<Data>& stacklist) {
     List<Data>::operator=(stacklist);
     return *this;
 }
@@ -13,7 +13,7 @@ StackLst<Data>& StackLst<Data>::operator=(const StackLst<Data>& stacklist) const
 // Move assignment
 template <typename Data>
 StackLst<Data>& StackLst<Data>::operator=(StackLst<Data>&& stacklist) noexcept {
-    List<Data>::operator(std::move(stacklist));
+    List<Data>::operator=(std::move(stacklist));
     return *this;
 }
 
@@ -30,13 +30,13 @@ bool StackLst<Data>::operator!=(const StackLst<Data>& stacklist) const noexcept 
 
 // Specific member functions inherited from Stack
 template <typename Data>
-Data& StackLst<Data>::Top() const {
-    return List><Data>::Front();
+const Data& StackLst<Data>::Top() const {
+    return List<Data>::Front();
 }
 
 template <typename Data>
 Data& StackLst<Data>::Top() {
-    return List><Data>::Front();
+    return List<Data>::Front();
 }
 
 template <typename Data>

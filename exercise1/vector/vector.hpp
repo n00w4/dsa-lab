@@ -66,8 +66,8 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const Vector<Data>&) const noexcept;
-  inline bool operator!=(const Vector<Data>&) const noexcept;
+  bool operator==(const Vector&) const noexcept;
+  inline bool operator!=(const Vector&) const noexcept;
 
   /* ************************************************************************ */
 
@@ -152,10 +152,6 @@ public:
 
   // Move assignment
   SortableVector& operator=(SortableVector&&) noexcept;
-
-protected:
-
-  // Auxiliary functions, if necessary!
 
 };
 

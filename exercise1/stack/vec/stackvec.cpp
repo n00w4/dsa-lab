@@ -11,7 +11,7 @@ StackVec<Data>::StackVec(StackVec<Data>&& stackvec) noexcept : Vector<Data>(std:
 
 // Copy assignment
 template <typename Data>
-StackVec<Data>& StackVec<Data>::operator=(const StackVec<Data>& stackvec) const noexcept {
+StackVec<Data>& StackVec<Data>::operator=(const StackVec<Data>& stackvec) {
     Vector<Data>::operator=(stackvec);
     index = stackvec.index;
     return *this;
@@ -47,26 +47,26 @@ bool StackVec<Data>::operator!=(const StackVec<Data>& stackvec) const noexcept {
 
 // Specific member functions inherited from Stack
 template <typename Data>
-Data& Top() const {
+const Data& StackVec<Data>::Top() const {
     if (index != 0) { return Elements[index - 1]; }
     else { throw std::length_error("Stack is empty"); }
 }
 
 template <typename Data>
-Data& Top() {
+Data& StackVec<Data>::Top() {
     if (index != 0) { return Elements[index - 1]; }
     else { throw std::length_error("Stack is empty"); }
 }
 
 template <typename Data>
 void StackVec<Data>::Pop() {
-    if (index != 0) { Resize(); index--; }
+    if (index != 0) { Reduce(); index--; }
     else { throw std::length_error("Stack is empty"); }
 }
 
 template <typename Data>
 Data StackVec<Data>::TopNPop() {
-    if (index != 0) { Resize(); return Elements[index--]; }
+    if (index != 0) { Reduce(); return Elements[index--]; }
     else { throw std::length_error("Stack is empty"); }
 }
 

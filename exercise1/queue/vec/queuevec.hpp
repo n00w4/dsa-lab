@@ -24,7 +24,7 @@ protected:
   unsigned long tail = 0;
 
   using Vector<Data>::size;
-  using Vector<Data>::elements;
+  using Vector<Data>::Elements;
 
 public:
 
@@ -35,18 +35,18 @@ public:
 
   // Specific constructor
   // A stack obtained from a TraversableContainer
-  QueueVec(const TraversableContainer<Data>& tc) : Vector<Data>(tc) {}
+  QueueVec(const TraversableContainer<Data>&);
 
   // A stack obtained from a MappableContainer
-  QueueVec(MappableContainer<Data>&& mc) : Vector<Data>(mc) {}
+  QueueVec(MappableContainer<Data>&&);
 
   /* ************************************************************************ */
 
   // Copy constructor
-  QueueVec(const QueueVec<Data>& queuevec) : Vector<Data>(queuevec), head(queuevec.head), tail(queuevec.tail) {}
+  QueueVec(const QueueVec& queuevec) : Vector<Data>(queuevec), head(queuevec.head), tail(queuevec.tail) {}
 
   // Move constructor
-  QueueVec(QueueVec<Data>&&) noexcept;
+  QueueVec(QueueVec&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -56,16 +56,16 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  QueueVec& operator=(const QueueVec<Data>& queuevec);
+  QueueVec& operator=(const QueueVec& queuevec);
 
   // Move assignment
-  QueueVec& operator=(QueueVec<Data>&&) noexcept;
+  QueueVec& operator=(QueueVec&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const QueueVec<Data>&) const noexcept;
-  bool operator!=(const QueueVec<Data>&) const noexcept;
+  bool operator==(const QueueVec&) const noexcept;
+  bool operator!=(const QueueVec&) const noexcept;
 
   /* ************************************************************************ */
 
@@ -81,7 +81,7 @@ public:
   void Dequeue() override;
   
   // HeadNDequeue() specifiers; // Override Queue member (must throw std::length_error when empty)
-  Data HeadNQueue() override;
+  Data HeadNDequeue() override;
   
   // Enqueue(argument) specifiers; // Override Queue member (copy of the value)
   void Enqueue(const Data&) override;

@@ -58,7 +58,7 @@ Vector<Data>::~Vector() {
 
 // Vector copy assignment
 template <typename Data>
-Vector<Data>& Vector<Data>::operator=(const Vector& vec) {
+Vector<Data>& Vector<Data>::operator=(const Vector<Data>& vec) {
     Vector<Data>* tempvec = new Vector<Data>(vec);
     std::swap(*tempvec, *this);
     delete tempvec;
@@ -67,7 +67,7 @@ Vector<Data>& Vector<Data>::operator=(const Vector& vec) {
 
 // Vector move assignment
 template <typename Data>
-Vector<Data>& Vector<Data>::operator=(Vector&& vec) noexcept {
+Vector<Data>& Vector<Data>::operator=(Vector<Data>&& vec) noexcept {
     std::swap(size, vec.size);
     std::swap(Elements, vec.Elements);
     return *this;

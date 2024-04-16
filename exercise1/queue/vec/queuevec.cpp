@@ -45,8 +45,8 @@ QueueVec<Data>& QueueVec<Data>::operator=(QueueVec<Data>&& queuevec) noexcept {
 template <typename Data>
 bool QueueVec<Data>::operator==(const QueueVec<Data>& queuevec) const noexcept {
     if (Size() == queuevec.Size()) {
-        for (unsigned long index1 = head, unsigned long index2 = queuevec.head; index1 < tail; index1++ %= size, index2++ %= queuevec.size;) {
-            if (elements[index1] != queuevec.elements[index2]) { return false; }
+        for (unsigned long index1 = head, index2 = queuevec.head; index1 < tail; ++index1 %= size, ++index2 %= queuevec.size) {
+            if (Elements[index1] != queuevec.Elements[index2]) { return false; }
         }
         return true;
     } else { return false; }
@@ -76,7 +76,7 @@ template <typename Data>
 void QueueVec<Data>::Dequeue() {
     if (head != tail) {
         Reduce();
-        head++ %= size;
+        ++head %= size;
     } else {
         throw std::length_error("Queue is empty");
         }
@@ -87,7 +87,7 @@ Data QueueVec<Data>::HeadNDequeue() {
     if (head != tail) {
         Reduce();
         Data data(std::move(Elements[head]));
-        head++ %= size;
+        ++head %= size;
         return std::move(data);
     } else {
         throw std::length_error("Queue is empty");
@@ -150,8 +150,8 @@ template <typename Data>
 void QueueVec<Data>::Resize(unsigned long newsize, unsigned long oldsize) {
     Data *Temp = new Data[newsize];
     unsigned long max = (oldsize <= newsize) ? oldsize : newsize;
-    for (unsigned long index1 = head, unsigned long index2 = 0; index2 < max; index1++ %= size, index2++) {
-        std::swap(Elemenets[index1], Temp[index2]);
+    for (unsigned long index1 = head, index2 = 0; index2 < max; ++index1 %= size, index2++) {
+        std::swap(Elements[index1], Temp[index2]);
     }
     std::swap(Elements, Temp);
     delete[] Temp;

@@ -86,7 +86,7 @@ public:
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
-  void Map(MapFun) override;
+  virtual void Map(MapFun) override = 0;
 };
 
 /* ************************************************************************** */
@@ -128,7 +128,7 @@ public:
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
-  void Map(MapFun) override;
+  virtual void Map(MapFun) override = 0;
 };
 
 /* ************************************************************************** */
@@ -172,7 +172,7 @@ public:
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
-  void Map(MapFun) override;
+  virtual void Map(MapFun) override = 0;
 };
 
 /* ************************************************************************** */
@@ -213,7 +213,7 @@ public:
   /* ************************************************************************ */
 
   // Specific member function (inherited from MappableContainer)
-  void Map(MapFun) override;
+  virtual void Map(MapFun) override = 0;
 };
 
 /* ************************************************************************** */

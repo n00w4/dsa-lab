@@ -28,7 +28,7 @@ protected:
 public:
 
   // Default constructor
-  StackVec() : Vector<Data>() {};
+  StackVec() : Vector<Data>(1) {};
 
   /* ************************************************************************ */
 
@@ -42,10 +42,10 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-  StackVec(const StackVec<Data>& stackvec) : Vector<Data>(stackvec), index(size) {}
+  StackVec(const StackVec& stackvec) : Vector<Data>(stackvec), index(size) {}
 
   // Move constructor
-  StackVec(StackVec<Data>&&) noexcept;
+  StackVec(StackVec&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -55,7 +55,7 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  StackVec& operator=(const StackVec&) const noexcept;
+  StackVec& operator=(const StackVec&);
   
   // Move assignment
   StackVec& operator=(StackVec&&) noexcept;
@@ -71,7 +71,7 @@ public:
   // Specific member functions (inherited from Stack)
 
   // Top() specifiers; // Override Stack member (non-mutable version; must throw std::length_error when empty)
-  Data& Top() const override;
+  const Data& Top() const override;
   
   // Top() specifiers; // Override Stack member (non-mutable version; must throw std::length_error when empty)
   Data& Top() override;

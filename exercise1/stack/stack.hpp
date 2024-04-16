@@ -43,7 +43,7 @@ public:
   // Specific member functions
 
   // (non-mutable version; concrete function must throw std::length_error when empty)
-  virtual Data& Top() const = 0;
+  virtual const Data& Top() const = 0;
 
   // (mutable version; concrete function must throw std::length_error when empty)
   virtual Data& Top() = 0;
@@ -52,7 +52,7 @@ public:
   virtual void Pop() = 0;
   
   // (concrete function must throw std::length_error when empty)
-  virtual void TopNPop() = 0;
+  virtual Data TopNPop() = 0;
   
   // Push() specifiers; // Copy of the value
   virtual void Push(const Data&) = 0;

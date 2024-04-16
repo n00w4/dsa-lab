@@ -38,8 +38,8 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const LinearContainer&) const noexcept;
-  bool operator!=(const LinearContainer&) const noexcept;
+  inline bool operator==(const LinearContainer&) const noexcept;
+  inline bool operator!=(const LinearContainer&) const noexcept;
 
   /* ************************************************************************ */
 

@@ -133,8 +133,8 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const PostOrderTraversableContainer&) const noexcept;
-  bool operator!=(const PostOrderTraversableContainer&) const noexcept;
+  bool operator==(const PostOrderTraversableContainer&) const noexcept = delete;
+  bool operator!=(const PostOrderTraversableContainer&) const noexcept = delete;
 
   /* ************************************************************************ */
 
@@ -180,8 +180,8 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const InOrderTraversableContainer&) const noexcept;
-  bool operator!=(const InOrderTraversableContainer&) const noexcept;
+  bool operator==(const InOrderTraversableContainer&) const noexcept = delete;
+  bool operator!=(const InOrderTraversableContainer&) const noexcept = delete;
 
   /* ************************************************************************ */
 
@@ -227,8 +227,8 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const BreadthTraversableContainer&) const noexcept;
-  bool operator!=(const BreadthTraversableContainer&) const noexcept;
+  bool operator==(const BreadthTraversableContainer&) const noexcept = delete;
+  bool operator!=(const BreadthTraversableContainer&) const noexcept = delete;
 
   /* ************************************************************************ */
 

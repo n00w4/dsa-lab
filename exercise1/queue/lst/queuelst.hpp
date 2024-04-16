@@ -40,10 +40,10 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-  QueueLst(const QueueLst<Data>& queuelist) : List<Data>(queuelist) {};
+  QueueLst(const QueueLst& queuelist) : List<Data>(queuelist) {};
 
   // Move constructor
-  QueueLst(QueueLst<Data>&& queuelist) noexcept : List<Data>(std::move(queuelist)) {};
+  QueueLst(QueueLst&& queuelist) noexcept : List<Data>(std::move(queuelist)) {};
 
   /* ************************************************************************ */
 
@@ -53,10 +53,10 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  QueueLst& operator=(const QueueLst<Data>&) const noexcept;
+  QueueLst& operator=(const QueueLst&);
 
   // Move assignment
-  QueueLst& operator=(QueueLst<Data>&&) noexcept;
+  QueueLst& operator=(QueueLst&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -69,7 +69,7 @@ public:
   // Specific member functions (inherited from Queue)
 
   // Head() specifiers; // Override Queue member (non-mutable version; must throw std::length_error when empty)
-  Data& Head() const override;
+  const Data& Head() const override;
   
   // Head() specifiers; // Override Queue member (mutable version; must throw std::length_error when empty)
   Data& Head() override;
@@ -91,10 +91,6 @@ public:
   // Specific member function (inherited from ClearableContainer)
 
   using List<Data>::Clear;
-
-protected:
-
-  // Auxiliary functions, if necessary!
 
 };
 

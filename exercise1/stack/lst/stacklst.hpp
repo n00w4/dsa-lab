@@ -40,10 +40,10 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-  StackLst(const StackLst<Data>& stacklist) : List<Data>(stacklist) {};
+  StackLst(const StackLst& stacklist) : List<Data>(stacklist) {};
 
   // Move constructor
-  StackLst(StackLst<Data>&& stacklist) noexcept : List<Data>(std::move(stacklist)) {};
+  StackLst(StackLst&& stacklist) noexcept : List<Data>(std::move(stacklist)) {};
 
   /* ************************************************************************ */
 
@@ -53,10 +53,10 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  StackLst& operator=(const StackLst<Data>&) const noexcept;
+  StackLst& operator=(const StackLst&);
 
   // Move assignment
-  StackLst& operator=(StackLst<Data>&&) noexcept;
+  StackLst& operator=(StackLst&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -69,7 +69,7 @@ public:
   // Specific member functions (inherited from Stack)
 
   // Top() specifiers; // Override Stack member (non-mutable version; must throw std::length_error when empty)
-  Data& Top() const override;
+  const Data& Top() const override;
 
   // Top() specifiers; // Override Stack member (mutable version; must throw std::length_error when empty)
   Data& Top() override;

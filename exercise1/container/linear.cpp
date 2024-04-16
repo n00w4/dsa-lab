@@ -2,6 +2,26 @@
 namespace lasd {
 
 /* ************************************************************************** */
+
+// Comparison operators
+template <typename Data>
+inline bool LinearContainer<Data>::operator==(const LinearContainer& linearContainer) const noexcept {
+    if (size != linearContainer.size) {
+        return false;
+    }
+    for (unsigned long index = 0; index < size; index++) {
+        if (operator[](index) != linearContainer[index]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+template <typename Data>
+inline bool LinearContainer<Data>::operator!=(const LinearContainer& linearContainer) const noexcept {
+    return !(*this == linearContainer);
+}
+
 // Inherited from TraversableContainer
 template <typename Data>
 inline void LinearContainer<Data>::Traverse(TraverseFun travFun) const {

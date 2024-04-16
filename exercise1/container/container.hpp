@@ -41,9 +41,9 @@ public:
   /* ************************************************************************ */
 
   // Specific member functions
-  bool Empty() const noexcept {return (size==0);}
+  virtual bool Empty() const noexcept { return (size == 0); };
 
-  unsigned long Size() const noexcept {return size;}
+  virtual unsigned long Size() const noexcept { return size; };
 };
 
 /* ************************************************************************** */
@@ -103,7 +103,7 @@ public:
   /* ************************************************************************ */
 
   // Specific member function (inherited from ClearableContainer)
-  void Clear() override;
+  virtual void Clear() override = 0;
 };
 
 /* ************************************************************************** */

@@ -13,7 +13,7 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class Queue: virtual public Container<Data> {
+class Queue: virtual public ClearableContainer {
 
 private:
 
@@ -43,7 +43,7 @@ public:
   // Specific member functions
 
   // Head() specifiers; // (non-mutable version; concrete function must throw std::length_error when empty)
-  virtual Data& Head() const = 0;
+  virtual const Data& Head() const = 0;
 
   // Head() specifiers; // (mutable version; concrete function must throw std::length_error when empty)
   virtual Data& Head() = 0;
