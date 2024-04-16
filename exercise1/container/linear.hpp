@@ -126,8 +126,8 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const SortableLinearContainer&) const noexcept;
-  bool operator!=(const SortableLinearContainer&) const noexcept;
+  inline bool operator==(const SortableLinearContainer&) const noexcept;
+  inline bool operator!=(const SortableLinearContainer&) const noexcept;
   
 
   /* ************************************************************************ */

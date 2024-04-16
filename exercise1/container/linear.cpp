@@ -91,13 +91,13 @@ inline Data& LinearContainer<Data>::Back() {
 
 // Specific member function from SortableContainer
 template <typename Data>
-inline void SortableLinearContainer<Data>::Sort() noexcept {
+void SortableLinearContainer<Data>::Sort() noexcept {
     QuickSort(0, size-1);
 }
 
 // QuickSort implementation
 template <typename Data>
-inline void SortableLinearContainer<Data>::QuickSort(unsigned long p, unsigned long r) noexcept {
+void SortableLinearContainer<Data>::QuickSort(unsigned long p, unsigned long r) noexcept {
     unsigned long q;
     if (p < r) {
         q = Partition(p,r);
@@ -108,7 +108,7 @@ inline void SortableLinearContainer<Data>::QuickSort(unsigned long p, unsigned l
 
 // Partition implementation
 template <typename Data>
-inline unsigned long SortableLinearContainer<Data>::Partition(unsigned long p, unsigned long r) noexcept {
+unsigned long SortableLinearContainer<Data>::Partition(unsigned long p, unsigned long r) noexcept {
     Data pivot = operator[](p);
     unsigned long i = p - 1; // index to slide the structure to the left
     unsigned long j = r + 1; // index to slide the structure to the right

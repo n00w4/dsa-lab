@@ -60,13 +60,13 @@ Data& StackVec<Data>::Top() {
 
 template <typename Data>
 void StackVec<Data>::Pop() {
-    if (index != 0) { Reduce(); index--; }
+    if (index != 0) { Reduce(); --index; }
     else { throw std::length_error("Stack is empty"); }
 }
 
 template <typename Data>
 Data StackVec<Data>::TopNPop() {
-    if (index != 0) { Reduce(); return Elements[index--]; }
+    if (index != 0) { Reduce(); return Elements[--index]; }
     else { throw std::length_error("Stack is empty"); }
 }
 
@@ -103,12 +103,12 @@ void StackVec<Data>::Clear() {
 // Auxiliary functions
 template <typename Data>
 void StackVec<Data>::Expand() {
-    if (index == size) { Vector<Data>::Resize(index * 2); }
+    if (index == size) { Vector<Data>::Resize(size * 2); }
 }
 
 template <typename Data>
 void StackVec<Data>::Reduce() {
-    if (index == size / 4) { Vector<Data>::Resize(index / 2); }
+    if (index == (size / 4)) { Vector<Data>::Resize(size / 2); }
 }
 
 /* ************************************************************************** */
