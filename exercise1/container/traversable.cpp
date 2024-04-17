@@ -7,17 +7,16 @@ namespace lasd {
 // TraversableContainer implementations
 template <typename Data>
 template <typename Accumulator>
-inline Accumulator TraversableContainer<Data>::Fold(FoldFun<Accumulator> foldFunction, const Accumulator& initialAcc) const {
-    Accumulator acc = initialAcc;
+inline Accumulator TraversableContainer<Data>::Fold(FoldFun<Accumulator> foldFunction, Accumulator inAcc) const {
     Traverse(
-        [&acc, foldFunction](const Data& data) {
-            acc = foldFunction(data, acc);
+        [&inAcc, foldFunction](const Data& data) {
+            inAcc = foldFunction(data, inAcc);
         });
-    return acc;
+    return inAcc;
 }
 
 template <typename Data>
-inline bool TraversableContainer<Data>::Exists(const Data in) const noexcept {
+inline bool TraversableContainer<Data>::Exists(const Data& in) const noexcept {
     bool exists = false;
     Traverse(
         [&in, &exists](const Data& data) {
@@ -29,13 +28,12 @@ inline bool TraversableContainer<Data>::Exists(const Data in) const noexcept {
 // PreOrderTraversableContainer implementations
 template <typename Data>
 template <typename Accumulator>
-inline Accumulator PreOrderTraversableContainer<Data>::PreOrderFold(FoldFun<Accumulator> foldFunction, const Accumulator& initialAcc) const {
-    Accumulator acc = initialAcc;
+inline Accumulator PreOrderTraversableContainer<Data>::PreOrderFold(FoldFun<Accumulator> foldFunction, Accumulator inAcc) const {
     PreOrderTraverse(
-        [&acc, foldFunction](const Data& data) {
-            acc = foldFunction(data, acc);
+        [&inAcc, foldFunction](const Data& data) {
+            inAcc = foldFunction(data, inAcc);
         });
-    return acc;
+    return inAcc;
 }
 
 template <typename Data>
@@ -46,13 +44,12 @@ inline void PreOrderTraversableContainer<Data>::Traverse(TraverseFun traverseFun
 // PostOrderTraversableContainer implementations
 template <typename Data>
 template <typename Accumulator>
-inline Accumulator PostOrderTraversableContainer<Data>::PostOrderFold(FoldFun<Accumulator> foldFunction, const Accumulator& initialAcc) const {
-    Accumulator acc = initialAcc;
+inline Accumulator PostOrderTraversableContainer<Data>::PostOrderFold(FoldFun<Accumulator> foldFunction, Accumulator inAcc) const {
     PostOrderTraverse(
-        [&acc, foldFunction](const Data& data) {
-            acc = foldFunction(data, acc);
+        [&inAcc, foldFunction](const Data& data) {
+            inAcc = foldFunction(data, inAcc);
         });
-    return acc;
+    return inAcc;
 }
 
 template <typename Data>
@@ -63,13 +60,12 @@ inline void PostOrderTraversableContainer<Data>::Traverse(TraverseFun traverseFu
 // InOrderTraversableContainer implementations
 template <typename Data>
 template <typename Accumulator>
-inline Accumulator InOrderTraversableContainer<Data>::InOrderFold(FoldFun<Accumulator> foldFunction, const Accumulator& initialAcc) const {
-    Accumulator acc = initialAcc;
+inline Accumulator InOrderTraversableContainer<Data>::InOrderFold(FoldFun<Accumulator> foldFunction, Accumulator inAcc) const {
     InOrderTraverse(
-        [&acc, foldFunction](const Data& data) {
-            acc = foldFunction(data, acc);
+        [&inAcc, foldFunction](const Data& data) {
+            inAcc = foldFunction(data, inAcc);
         });
-    return acc;
+    return inAcc;
 }
 
 template <typename Data>
@@ -80,13 +76,12 @@ inline void InOrderTraversableContainer<Data>::Traverse(TraverseFun traverseFunc
 // BreadthTraversableContainer implementations
 template <typename Data>
 template <typename Accumulator>
-inline Accumulator BreadthTraversableContainer<Data>::BreadthFold(FoldFun<Accumulator> foldFunction, const Accumulator& initialAcc) const {
-    Accumulator acc = initialAcc;
+inline Accumulator BreadthTraversableContainer<Data>::BreadthFold(FoldFun<Accumulator> foldFunction, Accumulator inAcc) const {
     BreadthTraverse(
-        [&acc, foldFunction](const Data& data) {
-            acc = foldFunction(data, acc);
+        [&inAcc, foldFunction](const Data& data) {
+            inAcc = foldFunction(data, inAcc);
         });
-    return acc;
+    return inAcc;
 }
 
 template <typename Data>

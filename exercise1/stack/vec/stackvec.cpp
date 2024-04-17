@@ -39,7 +39,7 @@ bool StackVec<Data>::operator==(const StackVec<Data>& stackvec) const noexcept {
 }
 
 template <typename Data>
-bool StackVec<Data>::operator!=(const StackVec<Data>& stackvec) const noexcept {
+inline bool StackVec<Data>::operator!=(const StackVec<Data>& stackvec) const noexcept {
     return !(*this == stackvec);
 }
 
@@ -48,7 +48,8 @@ bool StackVec<Data>::operator!=(const StackVec<Data>& stackvec) const noexcept {
 // Specific member functions inherited from Stack
 template <typename Data>
 const Data& StackVec<Data>::Top() const {
-    if (index != 0) { return Elements[index - 1]; }
+    unsigned long tempindex = index;
+    if (index != 0) { return Elements[tempindex - 1]; }
     else { throw std::length_error("Stack is empty"); }
 }
 
@@ -84,12 +85,12 @@ void StackVec<Data>::Push(Data&& data) {
 
 // Specific member functions inherited from Container
 template <typename Data>
-bool StackVec<Data>::Empty() const noexcept {
+inline bool StackVec<Data>::Empty() const noexcept {
     return (index == 0);
 }
 
 template <typename Data>
-unsigned long StackVec<Data>::Size() const noexcept {
+inline unsigned long StackVec<Data>::Size() const noexcept {
     return index;
 }
 

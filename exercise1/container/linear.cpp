@@ -5,10 +5,8 @@ namespace lasd {
 
 // Comparison operators
 template <typename Data>
-inline bool LinearContainer<Data>::operator==(const LinearContainer& linearContainer) const noexcept {
-    if (size != linearContainer.size) {
-        return false;
-    }
+inline bool LinearContainer<Data>::operator==(const LinearContainer<Data>& linearContainer) const noexcept {
+    if (size != linearContainer.size) { return false; }
     for (unsigned long index = 0; index < size; index++) {
         if (operator[](index) != linearContainer[index]) {
             return false;
@@ -18,7 +16,7 @@ inline bool LinearContainer<Data>::operator==(const LinearContainer& linearConta
 }
 
 template <typename Data>
-inline bool LinearContainer<Data>::operator!=(const LinearContainer& linearContainer) const noexcept {
+inline bool LinearContainer<Data>::operator!=(const LinearContainer<Data>& linearContainer) const noexcept {
     return !(*this == linearContainer);
 }
 
@@ -39,8 +37,8 @@ inline void LinearContainer<Data>::PreOrderTraverse(TraverseFun travFun) const {
 // Inherited from PostOrderTraversableContainer
 template <typename Data>
 inline void LinearContainer<Data>::PostOrderTraverse(TraverseFun travFun) const {
-    for (unsigned long index = size; index > 0; index--) {
-        travFun(operator[](index));
+    for (unsigned long index = size; index > 0;) {
+        travFun(operator[](--index));
     }
 }
 
@@ -61,8 +59,8 @@ inline void LinearContainer<Data>::PreOrderMap(MapFun mapFun) {
 // Inherited from PostOrderMappableContainer
 template <typename Data>
 inline void LinearContainer<Data>::PostOrderMap(MapFun mapFun) {
-    for (unsigned long index = size; index > 0; index--) {
-        mapFun(operator[](index));
+    for (unsigned long index = size; index > 0;) {
+        mapFun(operator[](--index));
     }
 }
 

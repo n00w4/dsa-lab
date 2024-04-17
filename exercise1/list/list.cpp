@@ -26,7 +26,8 @@ List<Data>::Node::~Node() {
 // It checks if the elements of two nodes are equal and if their next nodes are also equal or both are nullptr
 template <typename Data>
 bool List<Data>::Node::operator==(const Node& node) const noexcept {
-    return (element == node.element) && ((next == nullptr && node.next == nullptr) || (next != nullptr && node.next != nullptr && *next == *node.next));
+    return (element == node.element) && ((next == nullptr && node.next == nullptr) || ((next != nullptr && node.next != nullptr) && (*next == *node.next)));
+
 }
 
 template <typename Data>
@@ -60,7 +61,7 @@ List<Data>::List(const TraversableContainer<Data>& tc) {
 template <typename Data>
 List<Data>::List(MappableContainer<Data>&& mc) {
     mc.Map(
-        [this](const Data& data) {
+        [this](Data& data) {
             InsertAtBack(std::move(data));
         });
 }
@@ -68,7 +69,7 @@ List<Data>::List(MappableContainer<Data>&& mc) {
 // List copy constructor
 template <typename Data>
 List<Data>::List(const List<Data>& list) {
-    if (list.tail == nullptr) {
+    if (list.tail != nullptr) {
         tail = new Node(*list.tail);
         head = list.head->Clone(tail);
         size = list.size;
@@ -89,48 +90,52 @@ List<Data>::~List() {
     delete head;
 }
 
-// List copy assignment
+// List copy assignment operator
 template <typename Data>
 List<Data>& List<Data>::operator=(const List<Data>& list) {
     // Check if the current list size is less than or equal to the size of 'list'
     if (size <= list.size) {
         // If 'tail' is nullptr, create a new temporary list and swap contents with the current list
         if (tail == nullptr) {
-            List<Data>* temp = new List<Data>(list);
-            std::swap(*temp, *this);
-            delete temp;
+            List<Data>* temp = new List<Data>(list);  // Create a new temporary list
+            std::swap(*temp, *this);  // Swap contents between the temporary list and the current list
+            delete temp;  // Delete the temporary list
         } else {
             // Copy elements from 'list' to the current list
-            Node* currentSource = list.head;
+            Node* currentSource = list.head;  // Pointer to the current node in the source list
             for (Node* currentDest = head; currentDest != nullptr; currentDest = currentDest->next, currentSource = currentSource->next) {
-                currentDest->element = currentSource->element;
+                currentDest->element = currentSource->element;  // Copy element from source to destination
             }
-            // Add new nodes at the end of the current list, if necessary
+            // If there are remaining elements in the source list, add them to the end of the current list
             if (currentSource != nullptr) {
-                Node* newTail = new Node(*list.tail);
-                tail->next = currentSource->Clone(newTail);
-                tail = newTail;
-            } else {
-                // If 'list.tail' is nullptr, delete the current list
-                if (list.tail == nullptr) {
-                    delete head;
-                    head = tail = nullptr;
-                } else {
-                    // Copy remaining elements from 'list' to the current list
-                    Node* currentDest = head;
-                    for (Node* currentSource = list.head; currentSource != nullptr; currentSource = currentSource->next, tail = currentDest, currentDest = currentDest->next) {
-                        currentDest->element = currentSource->element; 
-                    }
-                    delete currentDest;
-                    tail->next = nullptr;
-                }
+                Node* newTail = new Node(*list.tail);  // Create a new node for the element of 'list.tail'
+                tail->next = currentSource->Clone(newTail);  // Connect the new node to the end of the current list
+                tail = newTail;  // Update 'tail' to point to the new node
+            } 
+        } 
+    } else {
+        // If the current list size is greater than the size of 'list'
+        if (list.tail == nullptr) {
+            // If 'list' is empty, delete all nodes in the current list
+            delete head;
+            head = tail = nullptr;
+        } else {
+            // Copy elements from 'list' to the current list
+            Node* currentDest = head;  // Pointer to the current node in the destination list
+            for (Node* currentSource = list.head; currentSource != nullptr; currentSource = currentSource->next, tail = currentDest, currentDest = currentDest->next) {
+                currentDest->element = currentSource->element;  // Copy element from source to destination
             }
+            delete currentDest;  // Delete the last remaining node that was not copied
+            tail->next = nullptr;  // Set the 'next' pointer of the last node to nullptr
         }
     }
     
+    // Update the size of the current list with the size of 'list'
     size = list.size;
+    // Return a reference to 'this' to support chained assignment
     return *this;
 }
+
 
 // List move assignment
 template <typename Data>
@@ -143,12 +148,12 @@ List<Data>& List<Data>::operator=(List<Data>&& list) noexcept {
 
 // List comparison operators
 template <typename Data>
-bool List<Data>::operator==(const List& list) const noexcept{
-    return (size == list.size) && ((head == nullptr && list.head == nullptr) || (head != nullptr && list.head != nullptr && *head == *list.head));
+inline bool List<Data>::operator==(const List<Data>& list) const noexcept{
+    return (size == list.size) && ((head == nullptr && list.head == nullptr) || ((head != nullptr && list.head != nullptr) && (*head == *list.head)));
 }
 
 template <typename Data>
-bool List<Data>::operator!=(const List& list) const noexcept {
+inline bool List<Data>::operator!=(const List<Data>& list) const noexcept {
     return !(*this == list);
 }
 
@@ -181,11 +186,8 @@ template <typename Data>
 void List<Data>::RemoveFromFront() {
     if (head != nullptr) {
         Node* front = head;
-        if (head == tail) {
-            head = tail = nullptr;
-        } else {
-            head = head->next;
-        }
+        if (head == tail) { head = tail = nullptr; }
+        else { head = head->next; }
         size--;
         front->next = nullptr;
         delete front;
@@ -198,11 +200,8 @@ template <typename Data>
 Data List<Data>::FrontNRemove() {
     if (head != nullptr) {
         Node* front = head;
-        if (head == tail) {
-            head = tail = nullptr;
-        } else {
-            head = head->next;
-        }
+        if (head == tail) { head = tail = nullptr; }
+        else { head = head->next; }
         size--;
         front->next = nullptr;
         Data dataToReturn(std::move(front->element));
@@ -216,11 +215,8 @@ Data List<Data>::FrontNRemove() {
 template <typename Data>
 void List<Data>::InsertAtBack(const Data& data) {
     Node* newnode = new Node(data);
-    if (tail == nullptr) {
-        head = newnode;
-    } else {
-        tail->next = newnode;
-    }
+    if (tail == nullptr) { head = newnode; }
+    else { tail->next = newnode; }
     tail = newnode;
     size++;
 }
@@ -228,11 +224,8 @@ void List<Data>::InsertAtBack(const Data& data) {
 template <typename Data>
 void List<Data>::InsertAtBack(Data&& data) {
     Node* newnode = new Node(std::move(data));
-    if (tail == nullptr) {
-        head = newnode;
-    } else {
-        tail->next = newnode;
-    }
+    if (tail == nullptr) { head = newnode; }
+    else { tail->next = newnode; }
     tail = newnode;
     size++;
 }
@@ -251,9 +244,7 @@ void List<Data>::Clear() {
 template <typename Data>
 bool List<Data>::Insert(const Data& data) {
     for (Node* current = head; current != nullptr; current = current->next) {
-        if (current->element == data) {
-            return false;
-        }
+        if (current->element == data) { return false; }
     }
     InsertAtBack(data);
     return true;
@@ -262,9 +253,7 @@ bool List<Data>::Insert(const Data& data) {
 template <typename Data>
 bool List<Data>::Insert(Data&& data) {
     for (Node* current = head; current != nullptr; current = current->next) {
-        if (current->element == data) {
-            return false;
-        }
+        if (current->element == data) { return false; }
     }
     InsertAtBack(std::move(data));
     return true;
@@ -360,19 +349,19 @@ void List<Data>::PostOrderTraverse(TraverseFun travFun) const {
 
 // Specific member function inherited from MappableContainer
 template <typename Data>
-void List<Data>::Map(MappableContainer<Data>::MapFun mapFun) {
+void List<Data>::Map(typename MappableContainer<Data>::MapFun mapFun) {
     PreOrderMap(mapFun, head);
 }
 
 // Specific member function inherited from PreOrderMappableContainer
 template <typename Data>
-void List<Data>::PreOrderMap(MappableContainer<Data>::MapFun mapFun) {
+void List<Data>::PreOrderMap(typename MappableContainer<Data>::MapFun mapFun) {
     PreOrderMap(mapFun, head);
 }
 
 // Specific member function inherited from PostOrderMappableContainer
 template <typename Data>
-void List<Data>::PostOrderMap(MappableContainer<Data>::MapFun mapFun) {
+void List<Data>::PostOrderMap(typename MappableContainer<Data>::MapFun mapFun) {
     PostOrderMap(mapFun, head);
 }
 
@@ -396,14 +385,14 @@ void List<Data>::PostOrderTraverse(TraverseFun travFun, const Node* currentnode)
 
 // Auxiliary functions (for MappableContainer)
 template <typename Data>
-void List<Data>::PreOrderMap(MappableContainer<Data>::MapFun mapFun, Node* currentnode) {
+void List<Data>::PreOrderMap(typename MappableContainer<Data>::MapFun mapFun, Node* currentnode) {
     for(; currentnode != nullptr; currentnode = currentnode->next) {
         mapFun(currentnode->element);
     }
 }
 
 template <typename Data>
-void List<Data>::PostOrderMap(MappableContainer<Data>::MapFun mapFun, Node* currentnode) {
+void List<Data>::PostOrderMap(typename MappableContainer<Data>::MapFun mapFun, Node* currentnode) {
     if (currentnode != nullptr) {
         PostOrderMap(mapFun, currentnode->next);
         mapFun(currentnode->element);

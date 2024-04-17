@@ -42,7 +42,7 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-  StackVec(const StackVec& stackvec) : Vector<Data>(stackvec), index(size) {}
+  StackVec(const StackVec& stackvec) : Vector<Data>(stackvec), index(stackvec.index) {}
 
   // Move constructor
   StackVec(StackVec&&) noexcept;
@@ -64,7 +64,7 @@ public:
 
   // Comparison operators
   bool operator==(const StackVec&) const noexcept;
-  bool operator!=(const StackVec&) const noexcept;
+  inline bool operator!=(const StackVec&) const noexcept;
 
   /* ************************************************************************ */
 
@@ -93,10 +93,10 @@ public:
   // Specific member functions (inherited from Container)
 
   // Empty() specifiers; // Override Container member
-  bool Empty() const noexcept override;
+  inline bool Empty() const noexcept override;
 
-  // type Size() specifiers; // Override Container member
-  unsigned long Size() const noexcept override;
+  // Size() specifiers; // Override Container member
+  inline unsigned long Size() const noexcept override;
 
   /* ************************************************************************ */
 

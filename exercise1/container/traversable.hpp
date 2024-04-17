@@ -52,12 +52,12 @@ public:
   using FoldFun = std::function<Accumulator(const Data &, const Accumulator &)>;
 
   template <typename Accumulator>
-  inline Accumulator Fold(FoldFun<Accumulator>, const Accumulator&) const;
+  inline Accumulator Fold(FoldFun<Accumulator>, Accumulator) const;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from TestableContainer)
-  inline bool Exists(const Data) const noexcept override;
+  inline bool Exists(const Data&) const noexcept override;
 };
 
 /* ************************************************************************** */
@@ -100,7 +100,7 @@ public:
   using FoldFun = typename TraversableContainer<Data>::FoldFun<Accumulator>;
 
   template <typename Accumulator>
-  inline Accumulator PreOrderFold(FoldFun<Accumulator>, const Accumulator&) const;
+  inline Accumulator PreOrderFold(FoldFun<Accumulator>, Accumulator) const;
 
   /* ************************************************************************ */
 
@@ -148,7 +148,7 @@ public:
   using FoldFun = typename TraversableContainer<Data>::FoldFun<Accumulator>;
 
   template <typename Accumulator>
-  inline Accumulator PostOrderFold(FoldFun<Accumulator>, const Accumulator&) const;
+  inline Accumulator PostOrderFold(FoldFun<Accumulator>, Accumulator) const;
 
   /* ************************************************************************ */
 
@@ -194,7 +194,7 @@ public:
   using FoldFun = typename TraversableContainer<Data>::FoldFun<Accumulator>;
 
   template <typename Accumulator>
-  inline Accumulator InOrderFold(FoldFun<Accumulator>, const Accumulator&) const;
+  inline Accumulator InOrderFold(FoldFun<Accumulator>, Accumulator) const;
 
   /* ************************************************************************ */
 
@@ -241,7 +241,7 @@ public:
   using FoldFun = typename TraversableContainer<Data>::FoldFun<Accumulator>;
 
   template <typename Accumulator>
-  inline Accumulator BreadthFold(FoldFun<Accumulator>, const Accumulator&) const;
+  inline Accumulator BreadthFold(FoldFun<Accumulator>, Accumulator) const;
 
   /* ************************************************************************ */
 
