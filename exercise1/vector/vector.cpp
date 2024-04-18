@@ -179,7 +179,7 @@ SortableVector<Data>::SortableVector(const TraversableContainer<Data>& tc) : Vec
 
 // A vector obtained from a MappableContainer
 template <typename Data>
-SortableVector<Data>::SortableVector(MappableContainer<Data>&& mc) : Vector<Data>(mc) {}
+SortableVector<Data>::SortableVector(MappableContainer<Data>&& mc) : Vector<Data>(std::move(mc)) {}
 
 // SortableVector copy constructor
 template <typename Data>
@@ -201,6 +201,17 @@ template <typename Data>
 SortableVector<Data>& SortableVector<Data>::operator=(SortableVector<Data>&& sv) noexcept {
     Vector<Data>::operator=(std::move(sv));
     return *this;
+}
+
+// SortableVector comparison operators
+template <typename Data>
+bool SortableVector<Data>::operator==(const SortableVector<Data>& sv) const noexcept {
+    return Vector<Data>::operator==(sv);
+}
+
+template <typename Data>
+inline bool SortableVector<Data>::operator!=(const SortableVector<Data>& sv) const noexcept {
+    return !(*this == sv);
 }
 
 }

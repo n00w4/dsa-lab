@@ -5,13 +5,13 @@ namespace lasd {
 
 // Node specific constructor
 template <typename Data>
-List<Data>::Node::Node(Data&& data) noexcept {
+inline List<Data>::Node::Node(Data&& data) noexcept {
     std::swap(element, data);
 }
 
 // Node move constructor
 template <typename Data>
-List<Data>::Node::Node(Node&& node) noexcept {
+inline List<Data>::Node::Node(Node&& node) noexcept {
     std::swap(element, node.element);
     std::swap(next, node.next);
 }
@@ -79,8 +79,8 @@ List<Data>::List(const List<Data>& list) {
 // List move constructor
 template <typename Data>
 List<Data>::List(List<Data>&& list) noexcept {
-    std::swap(tail, list.tail);
     std::swap(head, list.head);
+    std::swap(tail, list.tail);
     std::swap(size, list.size);
 }
 
@@ -140,8 +140,8 @@ List<Data>& List<Data>::operator=(const List<Data>& list) {
 // List move assignment
 template <typename Data>
 List<Data>& List<Data>::operator=(List<Data>&& list) noexcept {
-    std::swap(tail, list.tail);
     std::swap(head, list.head);
+    std::swap(tail, list.tail);
     std::swap(size, list.size);
     return *this; 
 }
