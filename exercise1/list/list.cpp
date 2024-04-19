@@ -261,14 +261,18 @@ bool List<Data>::Insert(Data&& data) {
 
 template <typename Data>
 bool List<Data>::Remove(const Data& data) {
-    Node* last = nullptr;
+    Node* last = nullptr;  // Pointer to the previous node in case we need to update 'tail'
+    // Traverse the list using a pointer to pointer to modify 'next' pointers
     for (Node** current = &head; *current != nullptr; last = *current, current = &((*current)->next)) {
         if ((*current)->element == data) {
-            Node* node = *current;
+            Node* node = *current;  // Save a pointer to the current node to be removed
+            // Update the pointer in the previous node to skip the current node
             *current = node->next;
+            // Separate the current node from the list by setting its 'next' pointer to nullptr
             node->next = nullptr;
             delete node;
             size--;
+            // If the removed node was the tail of the list, update 'tail' to the previous node
             if (tail == node) { tail = last; }
             return true;
         }
