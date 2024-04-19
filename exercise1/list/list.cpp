@@ -261,9 +261,15 @@ bool List<Data>::Insert(Data&& data) {
 
 template <typename Data>
 bool List<Data>::Remove(const Data& data) {
-    for (Node* current = head; current != nullptr; current = current->next) {
-        if (current->element == data) {
-            RemoveFromFront();
+    Node* last = nullptr;
+    for (Node** current = &head; *current != nullptr; last = *current, current = &((*current)->next)) {
+        if ((*current)->element == data) {
+            Node* node = *current;
+            *current = node->next;
+            node->next = nullptr;
+            delete node;
+            size--;
+            if (tail == node) { tail = last; }
             return true;
         }
     }
@@ -349,19 +355,19 @@ void List<Data>::PostOrderTraverse(TraverseFun travFun) const {
 
 // Specific member function inherited from MappableContainer
 template <typename Data>
-void List<Data>::Map(typename MappableContainer<Data>::MapFun mapFun) {
+void List<Data>::Map(MapFun mapFun) {
     PreOrderMap(mapFun, head);
 }
 
 // Specific member function inherited from PreOrderMappableContainer
 template <typename Data>
-void List<Data>::PreOrderMap(typename MappableContainer<Data>::MapFun mapFun) {
+void List<Data>::PreOrderMap(MapFun mapFun) {
     PreOrderMap(mapFun, head);
 }
 
 // Specific member function inherited from PostOrderMappableContainer
 template <typename Data>
-void List<Data>::PostOrderMap(typename MappableContainer<Data>::MapFun mapFun) {
+void List<Data>::PostOrderMap(MapFun mapFun) {
     PostOrderMap(mapFun, head);
 }
 
@@ -385,14 +391,14 @@ void List<Data>::PostOrderTraverse(TraverseFun travFun, const Node* currentnode)
 
 // Auxiliary functions (for MappableContainer)
 template <typename Data>
-void List<Data>::PreOrderMap(typename MappableContainer<Data>::MapFun mapFun, Node* currentnode) {
+void List<Data>::PreOrderMap(MapFun mapFun, Node* currentnode) {
     for(; currentnode != nullptr; currentnode = currentnode->next) {
         mapFun(currentnode->element);
     }
 }
 
 template <typename Data>
-void List<Data>::PostOrderMap(typename MappableContainer<Data>::MapFun mapFun, Node* currentnode) {
+void List<Data>::PostOrderMap(MapFun mapFun, Node* currentnode) {
     if (currentnode != nullptr) {
         PostOrderMap(mapFun, currentnode->next);
         mapFun(currentnode->element);
