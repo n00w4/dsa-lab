@@ -214,4 +214,14 @@ inline bool SortableVector<Data>::operator!=(const SortableVector<Data>& sv) con
     return !(*this == sv);
 }
 
+template <typename Data>
+const Data& SortableVector<Data>::operator[](const unsigned long index) const {
+    return Vector<Data>::operator[](index);
+}
+
+template <typename Data>
+Data& SortableVector<Data>::operator[](const unsigned long index) {
+    return Vector<Data>::operator[](index);
+}
+
 }

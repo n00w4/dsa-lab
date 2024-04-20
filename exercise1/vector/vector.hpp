@@ -157,6 +157,12 @@ public:
   bool operator==(const SortableVector&) const noexcept;
   inline bool operator!=(const SortableVector&) const noexcept;
 
+  /* ************************************************************************ */
+
+  // Specific member function (inherited from Vector)
+  const Data& operator[](const unsigned long) const override;
+  Data& operator[](const unsigned long) override;
+
 };
 
 /* ************************************************************************** */
