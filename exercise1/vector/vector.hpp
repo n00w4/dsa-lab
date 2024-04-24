@@ -153,7 +153,7 @@ public:
   // Move assignment
   SortableVector& operator=(SortableVector&&) noexcept;
 
-    // Comparison operators
+  // Comparison operators
   bool operator==(const SortableVector&) const noexcept;
   inline bool operator!=(const SortableVector&) const noexcept;
 
