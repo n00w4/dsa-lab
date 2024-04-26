@@ -58,7 +58,7 @@ void RandomIntNSizeVector(lasd::Vector<int> &lc) {
 }
 
 // Puts random integers in the list
-void RandomIntList (lasd::List<int> &lc, uint size) {
+void RandomIntList(lasd::List<int> &lc, uint size) {
   default_random_engine gen(random_device{}());
   uniform_int_distribution<int> dist(-100000, 100000);
   std::cout << "Populating the list... " << endl;
@@ -71,7 +71,7 @@ void RandomIntList (lasd::List<int> &lc, uint size) {
 }
 
 // Clears and resizes a list with a random size and random integers
-void RandomIntNSizeList (lasd::List<int> &lc) {
+void RandomIntNSizeList(lasd::List<int> &lc) {
   default_random_engine gen(random_device{}());
   uniform_int_distribution<uint> dist(1, 10000);
   std::cout << "Clearing and resizing the list... " << endl;
@@ -110,12 +110,15 @@ void RandomIntQueue(lasd::Queue<int> &queue, uint size) {
   default_random_engine gen(random_device{}());
   uniform_int_distribution<int> dist(-100000, 100000);
   std::cout << "Populating the queue... " << endl;
+  std::chrono::steady_clock::time_point begin = std::chrono::_V2::steady_clock::now();
   for (uint i = 0; i < size; i++) {
     queue.Enqueue(dist(gen));
   }
-  std::cout << "Queue populated" << endl;
+  std::chrono::steady_clock::time_point end = std::chrono::_V2::steady_clock::now();
+  std::cout << "Queue populated randomly in " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " µs" << endl;
 }
 
+// Clears and resizes a queue with a random size and random integers
 void RandomIntNSizeQueue(lasd::Queue<int> &queue) {
   default_random_engine gen(random_device{}());
   uniform_int_distribution<uint> dist(1, 10000);
@@ -126,6 +129,7 @@ void RandomIntNSizeQueue(lasd::Queue<int> &queue) {
   std::cout << "Queue cleared and resized with size " << size << endl;
 }
 
+// Checks if the vector is sorted
 template <typename Data>
 bool IsSortedVector(lasd::SortableVector<Data> &sv) {
   bool tst = true;
@@ -209,6 +213,7 @@ void SortVectorTest(uint &loctest, uint &testerr, lasd::SortableVector<Data> &sv
   testerr += (1 - (uint)tst);
 }
 
+// Checks if the container is empty
 void EmptyTest(uint &testnum, uint &testerr, lasd::Container &con) {
   bool tst = false;
   con.Empty() ? tst = true, testerr++, testnum++ : tst = false, testnum++;
