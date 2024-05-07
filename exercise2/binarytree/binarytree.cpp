@@ -3,41 +3,6 @@ namespace lasd {
 
 /* ************************************************************************** */
 
-// Node
-
-// Comparison operators
-template <typename Data>
-bool BinaryTree<Data>::Node::operator==(const Node& node) const noexcept {
-    bool val = true;
-
-    if(Element() == node.Element()) {
-        if(HasLeftChild() && node.HasLeftChild()) {
-            val = (LeftChild() == node.LeftChildChild());
-        }
-        else if (HasLeftChild() || node.HasLeftChild()) {
-            val = false;
-        }
-        
-        if(val) {
-            if(HasRightChild() && node.HasRightChild()) {
-                val = RightChild() == node.RightChildChild();
-            }
-            else if(HasRightChild() || node.HasRightChild()) {
-                val = false;
-            }
-        }
-  }
-  else { val = false; }
-    return val;
-}
-
-template <typename Data>
-bool BinaryTree<Data>::Node::operator!=(const Node& node) const noexcept {
-    return !(*this == node);
-}
-
-/* ************************************************************************** */
-
 // BinaryTree
 
 // Comparison operators
