@@ -48,6 +48,12 @@ protected:
     // Destructor
     virtual ~NodeLnk();
 
+    // Copy assignment
+    NodeLnk& operator=(const NodeLnk& node);
+
+    // Move assignment
+    NodeLnk& operator=(NodeLnk&& node) noexcept;
+
     /* ************************************************************************ */
 
     // Comparison operators

@@ -13,59 +13,58 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class BST {
-  // Must extend ClearableContainer,
-  //             DictionaryContainer<Data>,
-  //             BinaryTree<Data>,
-  //             BinaryTreeLnk<Data>
+class BST: virtual public ClearableContainer, virtual public DictionaryContainer<Data>, virtual public BinaryTree<Data>, virtual public BinaryTreeLnk<Data> {
 
 private:
 
-  // ...
-
 protected:
 
-  // using BinaryTreeLnk<Data>::???;
-
-  // ...
+  using BinaryTreeLnk<Data>::size;
+  using BinaryTreeLnk<Data>::root;
+  using typename BinaryTreeLnk<Data>::NodeLnk;
 
 public:
 
   // Default constructor
-  // BST() specifiers;
+  BST() = default;
 
   /* ************************************************************************ */
 
   // Specific constructors
-  // BST(argument) specifiers; // A bst obtained from a TraversableContainer
-  // BST(argument) specifiers; // A bst obtained from a MappableContainer
+  // A bst obtained from a TraversableContainer
+  BST(const TraversableContainer<Data>& tc);
+  // A bst obtained from a MappableContainer
+  BST(MappableContainer<Data>&& mc);
 
   /* ************************************************************************ */
 
   // Copy constructor
-  // BST(argument) specifiers;
+  BST(const BST<Data>& bst);
 
   // Move constructor
-  // BST(argument) specifiers;
+  BST(BST<Data>&& bst) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~BST() specifiers;
+  virtual ~BST();
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument) specifiers;
+  BST<Data>& operator=(const BST<Data>& bst);
 
   // Move assignment
-  // type operator=(argument) specifiers;
+  BST<Data>& operator=(BST<Data>&& bst) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  // type operator==(argument) specifiers;
-  // type operator!=(argument) specifiers;
+  using BinaryTreeLnk<Data>::operator==;
+  bool operator==(const BST<Data>&) const noexcept;
+  
+  using BinaryTreeLnk<Data>::operator==; 
+  inline bool operator!=(const BST<Data>&) const noexcept;
 
   /* ************************************************************************ */
 

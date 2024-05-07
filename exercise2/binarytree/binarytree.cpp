@@ -12,7 +12,7 @@ bool BinaryTree<Data>::Node::operator==(const Node& node) const noexcept {
 
     if(Element() == node.Element()) {
         if(HasLeftChild() && node.HasLeftChild()) {
-            val = (LeftChild() == node.LeftChild());
+            val = (LeftChild() == node.LeftChildChild());
         }
         else if (HasLeftChild() || node.HasLeftChild()) {
             val = false;
@@ -20,7 +20,7 @@ bool BinaryTree<Data>::Node::operator==(const Node& node) const noexcept {
         
         if(val) {
             if(HasRightChild() && node.HasRightChild()) {
-                val = RightChild() == node.RightChild();
+                val = RightChild() == node.RightChildChild();
             }
             else if(HasRightChild() || node.HasRightChild()) {
                 val = false;
@@ -83,6 +83,43 @@ void BinaryTree<Data>::BreadthTraverse(TraverseFun travFun) const {
     BreadthTraverse(travFun, Root());
 }
 
+
+// Auxiliary functions
+template <typename Data>
+void BinaryTree<Data>::PreOrderTraverse(typename TraversableContainer<Data>::TraverseFun travFun, const Node& node) const {
+    if (node != nullptr) {
+        travFun(node.Element());
+        PreOrderTraverse(travFun, node.LeftChild());
+        PreOrderTraverse(travFun, node.RightChild());
+    }
+}
+
+template <typename Data>
+void BinaryTree<Data>::PostOrderTraverse(typename TraversableContainer<Data>::TraverseFun travFun, const Node& node) const {
+    if (node != nullptr) {
+        PostOrderTraverse(travFun, node.LeftChild());
+        PostOrderTraverse(travFun, node.RightChild());
+        travFun(node.Element());
+    }
+}
+
+template <typename Data>
+void BinaryTree<Data>::InOrderTraverse(typename TraversableContainer<Data>::TraverseFun travFun, const Node& node) const {
+    if (node != nullptr) {
+        InOrderTraverse(travFun, node.LeftChild());
+        travFun(node.Element());
+        InOrderTraverse(travFun, node.RightChild());
+    }
+}
+
+template <typename Data>
+void BinaryTree<Data>::BreadthTraverse(typename TraversableContainer<Data>::TraverseFun travFun, const Node& node) const {
+    if (node != nullptr) {
+        travFun(node.Element());
+        if (node.HasLeftChild()) { BreadthTraverse(travFun, node.LeftChild()); }
+        if (node.HasRightChild()) { BreadthTraverse(travFun, node.RightChild()); }
+    }
+}
 /* ************************************************************************** */
 
 // MutableBinaryTree
@@ -115,6 +152,43 @@ void MutableBinaryTree<Data>::InOrderMap(MapFun mapFun) {
 template <typename Data>
 void MutableBinaryTree<Data>::BreadthMap(MapFun mapFun) {
     BreadthMap(mapFun, Root());
+}
+
+// Auxiliary functions
+template <typename Data>
+void MutableBinaryTree<Data>::PreOrderMap(MapFun mapFun, Node& node) {
+    if (node != nullptr) {
+        mapFun(node.Element());
+        PreOrderMap(mapFun, node.LeftChild());
+        PreOrderMap(mapFun, node.RightChild());
+    }
+}
+
+template <typename Data>
+void MutableBinaryTree<Data>::PostOrderMap(MapFun mapFun, Node& node) {
+    if (node != nullptr) {
+        PostOrderMap(mapFun, node.LeftChild());
+        PostOrderMap(mapFun, node.RightChild());
+        mapFun(node.Element());
+    }
+}
+
+template <typename Data>
+void MutableBinaryTree<Data>::InOrderMap(MapFun mapFun, Node& node) {
+    if (node != nullptr) {
+        InOrderMap(mapFun, node.LeftChild());
+        mapFun(node.Element());
+        InOrderMap(mapFun, node.RightChild());
+    }
+}
+
+template <typename Data>
+void MutableBinaryTree<Data>::BreadthMap(MapFun mapFun, Node& node) {
+    if (node != nullptr) {
+        travFun(node.Element());
+        if (node.HasLeftChild()) { BreadthMap(travFun, node.LeftChild()); }
+        if (node.HasRightChild()) { BreadthMap(travFun, node.RightChild()); }
+    }
 }
 
 /* ************************************************************************** */

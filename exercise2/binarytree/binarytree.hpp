@@ -144,7 +144,10 @@ public:
 
 protected:
 
-  // Auxiliary function for BreadthMappableContainer
+  // Auxiliary functions
+  virtual void PreOrderTraverse(TraverseFun, const Node&) const;
+  virtual void PostOrderTraverse(TraverseFun, const Node&) const;
+  virtual void InOrderTraverse(TraverseFun, const Node&) const;
   virtual void BreadthTraverse(TraverseFun, const Node&) const;
 
 };
@@ -256,7 +259,11 @@ public:
 
 protected:
 
-  virtual void BreadthMap(MapFun, const Node&);
+  // Auxiliary functions
+  virtual void PreOrderMap(MapFun, Node&);
+  virtual void PostOrderMap(MapFun, Node&);
+  virtual void InOrderMap(MapFun, Node&);
+  virtual void BreadthMap(MapFun, Node&);
 
 };
 

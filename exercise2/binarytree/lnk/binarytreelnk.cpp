@@ -34,6 +34,12 @@ BinaryTreeLnk<Data>::NodeLnk::~NodeLnk() {
     delete right;
 };
 
+// Copy assignment
+template <typename Data>
+typename BinaryTreeLnk<Data>::NodeLnk& BinaryTreeLnk<Data>::NodeLnk::operator=(const NodeLnk& node) {
+   // todo
+}
+
 // Comparison operators
 template <typename Data>
 bool BinaryTreeLnk<Data>::NodeLnk::operator==(const NodeLnk& node) const noexcept {
@@ -111,8 +117,8 @@ BinaryTreeLnk<Data>::BinaryTreeLnk(const TraversableContainer<Data>& tc) {
     tc.Traverse([&stack] (const Data& data) {
         NodeLnk*& currentNode = *stack.Top();
         currentNode = new NodeLnk(data);
-        stack.Push(&currentNode->right);
         stack.Push(&currentNode->left);
+        stack.Push(&currentNode->right);
     })
 }
 
@@ -124,8 +130,8 @@ BinaryTreeLnk<Data>::BinaryTreeLnk(MappableContainer<Data>&& mc) {
     mc.Map([&stack] (const Data& data) {
         NodeLnk*& currentNode = *stack.Top();
         currentNode = new NodeLnk(std::move(data));
-        stack.Push(&currentNode->right);
         stack.Push(&currentNode->left);
+        stack.Push(&currentNode->right);
     });
 }
 
