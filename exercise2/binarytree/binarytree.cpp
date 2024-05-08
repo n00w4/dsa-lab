@@ -3,6 +3,29 @@ namespace lasd {
 
 /* ************************************************************************** */
 
+// Node
+
+// Comparison operators
+template <typename Data>
+bool BinaryTree<Data>::Node::operator==(const Node& node) const noexcept {
+    if (node.Element() == this->Element()){ 
+        if ((this->HasRightChild() == node.HasRightChild()) && (this->HasLeftChild() == node.HasLeftChild())) {
+            if (this->HasLeftChild() && this->HasRightChild()) { return ((node.LeftChild() == LeftChild()) && (node.RightChild() == RightChild())); } 
+            else if (this->HasLeftChild()) { return (node.LeftChild() == LeftChild()); } 
+            else if (this->HasRightChild()) { return (node.RightChild() == RightChild()); }
+            else{ return true; }
+        }
+  }
+  return false;
+}
+
+template <typename Data>
+bool BinaryTree<Data>::Node::operator!=(const Node& node) const noexcept {
+    return !(*this == node);
+}
+
+/* ************************************************************************** */
+
 // BinaryTree
 
 // Comparison operators
@@ -18,65 +41,14 @@ bool BinaryTree<Data>::operator!=(const BinaryTree<Data>& bt) const noexcept {
     return !(*this == bt);
 }
 
-// Specific member function inherited from TraversableContainer
-template <typename Data>
-void BinaryTree<Data>::Traverse(TraverseFun travFun) const {
-    PostOrderTraverse(travFun, Root());
-}
-
-// Specific member function inherited from PreOrderTraversableContainer
-template <typename Data>
-void BinaryTree<Data>::PreOrderTraverse(TraverseFun travFun) const {
-    PreOrderTraverse(travFun, Root());
-}
-
-// Specific member function inherited from PostOrderTraversableContainer
-template <typename Data>
-void BinaryTree<Data>::PostOrderTraverse(TraverseFun travFun) const {
-    PostOrderTraverse(travFun, Root());
-}
-
-// Specific member function inherited from InOrderTraversableContainer
-template <typename Data>
-void BinaryTree<Data>::InOrderTraverse(TraverseFun travFun) const {
-    InOrderTraverse(travFun, Root());
-}
-
 // Specific member function inherited from BreadthTraversableContainer
 template <typename Data>
 void BinaryTree<Data>::BreadthTraverse(TraverseFun travFun) const {
-    BreadthTraverse(travFun, Root());
+    if (!(this->Empty())) { BreadthTraverse(travFun, Root()); }
 }
 
 
-// Auxiliary functions
-template <typename Data>
-void BinaryTree<Data>::PreOrderTraverse(typename TraversableContainer<Data>::TraverseFun travFun, const Node& node) const {
-    if (node != nullptr) {
-        travFun(node.Element());
-        PreOrderTraverse(travFun, node.LeftChild());
-        PreOrderTraverse(travFun, node.RightChild());
-    }
-}
-
-template <typename Data>
-void BinaryTree<Data>::PostOrderTraverse(typename TraversableContainer<Data>::TraverseFun travFun, const Node& node) const {
-    if (node != nullptr) {
-        PostOrderTraverse(travFun, node.LeftChild());
-        PostOrderTraverse(travFun, node.RightChild());
-        travFun(node.Element());
-    }
-}
-
-template <typename Data>
-void BinaryTree<Data>::InOrderTraverse(typename TraversableContainer<Data>::TraverseFun travFun, const Node& node) const {
-    if (node != nullptr) {
-        InOrderTraverse(travFun, node.LeftChild());
-        travFun(node.Element());
-        InOrderTraverse(travFun, node.RightChild());
-    }
-}
-
+// Auxiliary function
 template <typename Data>
 void BinaryTree<Data>::BreadthTraverse(typename TraversableContainer<Data>::TraverseFun travFun, const Node& node) const {
     if (node != nullptr) {
@@ -89,71 +61,20 @@ void BinaryTree<Data>::BreadthTraverse(typename TraversableContainer<Data>::Trav
 
 // MutableBinaryTree
 
-// Specific member function inherited from MappableContainer
-template <typename Data>
-void MutableBinaryTree<Data>::Map(MapFun mapFun) {
-    PostOrderMap(mapFun, Root());
-}
-
-// Specific member function inherited from PreOrderMappableContainer
-template <typename Data>
-void MutableBinaryTree<Data>::PreOrderMap(MapFun mapFun) {
-    PreOrderMap(mapFun, Root());
-}
-
-// Specific member function inherited from PostOrderMappableContainer
-template <typename Data>
-void MutableBinaryTree<Data>::PostOrderMap(MapFun mapFun) {
-    PostOrderMap(mapFun, Root());
-}
-
-// Specific member function inherited from InOrderMappableContainer
-template <typename Data>
-void MutableBinaryTree<Data>::InOrderMap(MapFun mapFun) {
-    InOrderMap(mapFun, Root());
-}
-
 // Specific member function inherited from BreadthMappableContainer
 template <typename Data>
-void MutableBinaryTree<Data>::BreadthMap(MapFun mapFun) {
-    BreadthMap(mapFun, Root());
+void MutableBinaryTree<Data>::BreadthMap(typename MappableContainer<Data>::MapFun mapFun) {
+    if (!(this->Empty())) { BreadthMap(mapFun, Root()); }
 }
 
-// Auxiliary functions
+// Auxiliary function
 template <typename Data>
-void MutableBinaryTree<Data>::PreOrderMap(MapFun mapFun, Node& node) {
-    if (node != nullptr) {
+void MutableBinaryTree<Data>::BreadthMap(typename MappableContainer<Data>::MapFun mapFun, Node& node) {
+    //if (node != nullptr) {
         mapFun(node.Element());
-        PreOrderMap(mapFun, node.LeftChild());
-        PreOrderMap(mapFun, node.RightChild());
-    }
-}
-
-template <typename Data>
-void MutableBinaryTree<Data>::PostOrderMap(MapFun mapFun, Node& node) {
-    if (node != nullptr) {
-        PostOrderMap(mapFun, node.LeftChild());
-        PostOrderMap(mapFun, node.RightChild());
-        mapFun(node.Element());
-    }
-}
-
-template <typename Data>
-void MutableBinaryTree<Data>::InOrderMap(MapFun mapFun, Node& node) {
-    if (node != nullptr) {
-        InOrderMap(mapFun, node.LeftChild());
-        mapFun(node.Element());
-        InOrderMap(mapFun, node.RightChild());
-    }
-}
-
-template <typename Data>
-void MutableBinaryTree<Data>::BreadthMap(MapFun mapFun, Node& node) {
-    if (node != nullptr) {
-        travFun(node.Element());
-        if (node.HasLeftChild()) { BreadthMap(travFun, node.LeftChild()); }
-        if (node.HasRightChild()) { BreadthMap(travFun, node.RightChild()); }
-    }
+        if (node.HasLeftChild()) { BreadthMap(mapFun, node.LeftChild()); }
+        if (node.HasRightChild()) { BreadthMap(mapFun, node.RightChild()); }
+    //}
 }
 
 /* ************************************************************************** */

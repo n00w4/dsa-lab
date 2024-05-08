@@ -11,8 +11,8 @@
 
 // #include "../stack/vec/stackvec.hpp"
 #include "../stack/lst/stacklst.hpp"
-// #include "../stack/vec/queuevec.hpp"
-// #include "../stack/lst/queuelst.hpp"
+// #include "../queue/vec/queuevec.hpp"
+#include "../queue/lst/queuelst.hpp"
 
 /* ************************************************************************** */
 
@@ -145,9 +145,9 @@ public:
 protected:
 
   // Auxiliary functions
-  virtual void PreOrderTraverse(TraverseFun, const Node&) const;
-  virtual void PostOrderTraverse(TraverseFun, const Node&) const;
-  virtual void InOrderTraverse(TraverseFun, const Node&) const;
+  // virtual void PreOrderTraverse(TraverseFun, const Node&) const;
+  // virtual void PostOrderTraverse(TraverseFun, const Node&) const;
+  // virtual void InOrderTraverse(TraverseFun, const Node&) const;
   virtual void BreadthTraverse(TraverseFun, const Node&) const;
 
 };
@@ -178,6 +178,10 @@ public:
 
     /* ********************************************************************** */
 
+    // Comparison operators
+    bool operator==(const MutableNode&) const noexcept = default;
+    bool operator!=(const MutableNode&) const noexcept = default;
+
     // Copy assignment
     MutableNode& operator=(const MutableNode&) = delete;
 
@@ -189,6 +193,7 @@ public:
     // Specific member functions
 
     // Element() specifiers; // Mutable access to the element (concrete function should not throw exceptions)
+    using Node::Element;
     virtual Data& Element() noexcept = 0;
     // LeftChild() specifiers; // (concrete function must throw std::out_of_range when not existent)
     using Node::LeftChild;
@@ -750,25 +755,25 @@ private:
 protected:
   
   const typename BinaryTree<Data>::Node* root = nullptr;
-  StackLst<const typename BinaryTree<Data>::Node*> stack;
+  QueueLst<const typename BinaryTree<Data>::Node*> queue;
 
 public:
 
   // Specific constructors
   // An iterator over a given binary tree
   BTBreadthIterator(const BinaryTree<Data>& bt) {
-    if (!bt.Empty()) { stack.Push(root = &bt.Root()); }
+    if (!bt.Empty()) { queue.Enqueue(root = &bt.Root()); }
   };
 
   /* ************************************************************************ */
 
   // Copy constructor
-  BTBreadthIterator(const BTBreadthIterator& iter) : root(iter.root), stack(iter.stack) {};
+  BTBreadthIterator(const BTBreadthIterator& iter) : root(iter.root), queue(iter.queue) {};
 
   // Move constructor
   BTBreadthIterator(BTBreadthIterator&& iter) noexcept {
     std::swap(root, iter.root);
-    std::swap(stack, iter.stack);
+    std::swap(queue, iter.queue);
   };
 
   /* ************************************************************************ */
@@ -781,13 +786,13 @@ public:
   // Copy assignment
   BTBreadthIterator& operator=(const BTBreadthIterator& iter) {
     root = iter.root;
-    stack = iter.stack;
+    queue = iter.queue;
   };
 
   // Move assignment
   BTBreadthIterator& operator=(BTBreadthIterator&& iter) noexcept {
     std::swap(root, iter.root);
-    std::swap(stack, iter.stack);
+    std::swap(queue, iter.queue);
   };
 
   /* ************************************************************************ */
@@ -802,13 +807,13 @@ public:
 
   // operator*() specifiers; // (throw std::out_of_range when terminated)
   const Data& operator*() const override {
-    if (!stack.Empty()) { return stack.Top()->Element(); }
+    if (!queue.Empty()) { return queue.Head(); }
     else { throw std::out_of_range("Iterator terminated"); }
   };
 
   // Terminated() specifiers; // (should not throw exceptions)
   bool Terminated() const noexcept override {
-    return stack.Empty();
+    return queue.Empty();
   };
 
   /* ************************************************************************ */
@@ -817,9 +822,9 @@ public:
 
   // operator++() specifiers; // (throw std::out_of_range when terminated)
   ForwardIterator<Data>& operator++() override {
-    const typename BinaryTree<Data>::Node& node = *stack.TopNPop();
-    if (node.HasLeftChild()) { stack.Push(&node.LeftChild()); }
-    if (node.HasRightChild()) { stack.Push(&node.RightChild()); }
+    const typename BinaryTree<Data>::Node& node = *queue.HeadNDequeue();
+    if (node.HasLeftChild()) { queue.Enqueue(&node.LeftChild()); }
+    if (node.HasRightChild()) { queue.Enqueue(&node.RightChild()); }
     return *this;
   };
 
@@ -830,8 +835,8 @@ public:
   // Reset() specifiers; // (should not throw exceptions)
   void Reset() noexcept override {
     if (root != nullptr) {
-      stack.Clear();
-      stack.Push(root);
+      queue.Clear();
+      queue.Enqueue(root);
     }
   };
 
@@ -846,7 +851,7 @@ private:
 
 protected:
 
-  using BTBreadthIterator<Data>::stack;
+  using BTBreadthIterator<Data>::queue;
 
 public:
 
@@ -891,7 +896,7 @@ public:
 
   // operator*() specifiers; // (throw std::out_of_range when terminated)
   Data& operator*() override {
-    if (!stack.Empty()) { return const_cast<Data&>(stack.Top()->Element()); }
+    if (!queue.Empty()) { return const_cast<Data&>(queue.Head()); }
     else { throw std::out_of_range("Iterator terminated"); }
   };
 

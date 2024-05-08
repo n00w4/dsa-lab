@@ -36,8 +36,38 @@ BinaryTreeLnk<Data>::NodeLnk::~NodeLnk() {
 
 // Copy assignment
 template <typename Data>
-typename BinaryTreeLnk<Data>::NodeLnk& BinaryTreeLnk<Data>::NodeLnk::operator=(const NodeLnk& node) {
-   // todo
+typename BinaryTreeLnk<Data>::NodeLnk& BinaryTreeLnk<Data>::NodeLnk::operator=(const BinaryTreeLnk<Data>::NodeLnk& node) {
+   element = node.element;
+   if (left == nullptr) {
+    if (node.left != nullptr) { left = new NodeLnk(*node.left); }
+    else {
+        if (node.left != nullptr) { *left = *node.left; }
+        else {
+            delete left;
+            left = nullptr;
+        }
+    }
+   }
+   if (right == nullptr) {
+    if (node.right != nullptr) { right = new NodeLnk(*node.right); }
+    else {
+        if (node.right != nullptr) { *right = *node.right; }
+        else {
+            delete right;
+            right = nullptr;
+        }
+    }
+   }
+   return *this;
+}
+
+// Move assignment
+template <typename Data>
+typename BinaryTreeLnk<Data>::NodeLnk& BinaryTreeLnk<Data>::NodeLnk::operator=(NodeLnk&& node) noexcept {
+    std::swap(element, node.element);
+    std::swap(left, node.left);
+    std::swap(right, node.right);
+    return *this;
 }
 
 // Comparison operators
@@ -119,7 +149,7 @@ BinaryTreeLnk<Data>::BinaryTreeLnk(const TraversableContainer<Data>& tc) {
         currentNode = new NodeLnk(data);
         stack.Push(&currentNode->left);
         stack.Push(&currentNode->right);
-    })
+    });
 }
 
 template <typename Data>

@@ -14,14 +14,9 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class BinaryTreeVec: virtual public MutableBinaryTree<Data> {
+class BinaryTreeVec: virtual public MutableBinaryTree<Data>, virtual protected Vector<Data> {
 
 private:
-
-protected:
-
-  using Vector<Data>::size;
-  using Vector<Data>::Elements;
 
 public:
 
@@ -29,6 +24,9 @@ public:
   using typename MutableBinaryTree<Data>::MutableNode;
 
 protected:
+
+  using Vector<Data>::size;
+  using Vector<Data>::Elements;
 
   struct NodeVec: virtual MutableNode {
 
@@ -114,14 +112,14 @@ public:
   // Specific member functions (inherited from BinaryTree)
 
   // Root() specifiers; // Override BinaryTree member (throw std::length_error when empty)
-  const Node& Root() const override;
+  const NodeVec& Root() const override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from MutableBinaryTree)
 
   // Root() specifiers; // Override MutableBinaryTree member (throw std::length_error when empty)
-  MutableNode& Root() override;
+  NodeVec& Root() override;
 
   /* ************************************************************************ */
 
@@ -132,25 +130,51 @@ public:
 
   /* ************************************************************************ */
 
+  // Specific member function (inherited from TraversableContainer)
+  using typename TraversableContainer<Data>::TraverseFun;
+  
+  void Traverse(TraverseFun) const override;
+
+  // Specific member function (inherited from PreOrderTraversableContainer)
+  void PreOrderTraverse(TraverseFun) const override;
+
+  // Specific member function (inherited from PostOrderTraversableContainer)
+  void PostOrderTraverse(TraverseFun) const override;
+
+  // Specific member function (inherited from InOrderTraversableContainer)
+  void InOrderTraverse(TraverseFun) const override;
+
   // Specific member function (inherited from BreadthTraversableContainer)
 
-  using typename TraversableContainer<Data>::TraverseFun;
   // BreadthTraverse(arguments) specifiers; // Override BreadthTraversableContainer member
-  void BreadthTraverse(TraverseFun) const;
+  void BreadthTraverse(TraverseFun) const override;
 
   /* ************************************************************************ */
+  
+  // Specific member function (inherited from MappableContainer)
+  using typename MappableContainer<Data>::MapFun;
+  
+  void Map(MapFun) override;
+
+  // Specific member function (inherited from PreOrderMappableContainer)
+  void PreOrderMap(MapFun) override;
+
+  // Specific member function (inherited from PostOrderMappableContainer)
+  void PostOrderMap(MapFun) override;
+
+  // Specific member function (inherited from InOrderMappableContainer)
+  void InOrderMap(MapFun) override;
 
   // Specific member function (inherited from BreadthMappableContainer)
 
-  using typename MappableContainer<Data>::MapFun;
   // BreadthMap(arguments) specifiers; // Override BreadthMappableContainer member
-  void BreadthMap(MapFun);
+  void BreadthMap(MapFun) override;
 
 protected:
 
   // Auxiliary functions
   void BreadthTraverse(TraverseFun, const Node&) const;
-  void BreadthMap(MapFun, const Node&);
+  void BreadthMap(MapFun, Node&);
 
 };
 
