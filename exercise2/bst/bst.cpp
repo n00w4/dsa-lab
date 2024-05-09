@@ -15,7 +15,7 @@ BST<Data>& BST<Data>::operator=(const BST<Data>& bst){
 // Move assignment
 template <typename Data>
 BST<Data>& BST<Data>::operator=(BST<Data>&& bst) noexcept {
-    BinaryTreeLnk<Data>::operator=(std::move(bt));
+    BinaryTreeLnk<Data>::operator=(std::move(bst));
     return *this;
 }
 
@@ -95,7 +95,7 @@ void BST<Data>::RemoveMax() {
 
 template <typename Data>
 const Data& BST<Data>::Predecessor(const Data &data) const {
-    struct BST<Data>::NodeLnk* const* pointer = &FindPointerToPredecessor(root, data);
+    typename BST<Data>::NodeLnk* const* pointer = &FindPointerToPredecessor(root, data);
     if (*pointer == nullptr) {
         throw std::length_error("Predecessor not found");
     }
@@ -104,7 +104,7 @@ const Data& BST<Data>::Predecessor(const Data &data) const {
 
 template <typename Data>
 Data BST<Data>::PredecessorNRemove(const Data &data) {
-    struct BST<Data>::NodeLnk** pointer = &FindPointerToPredecessor(root, data);
+    typename BST<Data>::NodeLnk** pointer = &FindPointerToPredecessor(root, data);
     if (&pointer == nullptr) {
         throw std::length_error("Predecessor not found");
     }
@@ -113,7 +113,7 @@ Data BST<Data>::PredecessorNRemove(const Data &data) {
 
 template <typename Data>
 void BST<Data>::RemovePredecessor(const Data &data) {
-    struct BST<Data>::NodeLnk** pointer = &FindPointerToPredecessor(root, data);
+    typename BST<Data>::NodeLnk** pointer = &FindPointerToPredecessor(root, data);
     if (pointer == nullptr) {
         throw std::length_error("Predecessor not found");
     }
@@ -125,7 +125,7 @@ void BST<Data>::RemovePredecessor(const Data &data) {
 //Successor function
 template <typename Data>
 const Data& BST<Data>::Successor(const Data &data) const {
-    struct BST<Data>::NodeLnk* const* pointer = &FindPointerToSuccessor(root, data);
+    typename BST<Data>::NodeLnk* const* pointer = &FindPointerToSuccessor(root, data);
     if (pointer == nullptr) {
         throw std::length_error("Successor not found");
     }
@@ -134,7 +134,7 @@ const Data& BST<Data>::Successor(const Data &data) const {
 
 template <typename Data>
 Data BST<Data>::SuccessorNRemove(const Data &data) {
-    struct BST<Data>::NodeLnk** pointer = &FindPointerToSuccessor(root, data);
+    typename BST<Data>::NodeLnk** pointer = &FindPointerToSuccessor(root, data);
     if (pointer == nullptr) {
         throw std::length_error("Successor not found");
     }
@@ -143,7 +143,7 @@ Data BST<Data>::SuccessorNRemove(const Data &data) {
 
 template <typename Data>
 void BST<Data>::RemoveSuccessor(const Data &data) {
-    struct BST<Data>::NodeLnk** pointer = &FindPointerToSuccessor(root, data);
+    typename BST<Data>::NodeLnk** pointer = &FindPointerToSuccessor(root, data);
     if (pointer == nullptr) {
         throw std::length_error("Successor not found");
     }
@@ -154,26 +154,39 @@ void BST<Data>::RemoveSuccessor(const Data &data) {
 
 // Specific member functions inherited from DictionaryContainer
 template <typename Data>
-void BST<Data>::Insert(const Data& data) noexcept {
-    struct BST<Data>::NodeLnk*& pointer = FindPointerTo(root, data);
-    if (pointer == nullptr){
+bool BST<Data>::Insert(const Data& data) {
+    typename BST<Data>::NodeLnk*& pointer = FindPointerTo(root, data);
+    if (pointer == nullptr) {
         pointer = new struct BST<Data>::NodeLnk(data);
         size++;
+        return true;
+    } else {
+        return false;
+        throw std::length_error("Element already exists");
     }
 }
 
 template <typename Data>
-void BST<Data>::Insert(Data&& data) noexcept {
-    struct BST<Data>::NodeLnk*& pointer = FindPointerTo(root, data);
+bool BST<Data>::Insert(Data&& data) {
+    typename BST<Data>::NodeLnk*& pointer = FindPointerTo(root, data);
     if (pointer == nullptr) {
         pointer = new struct BST<Data>::NodeLnk(std::move(data));
         size++;
+        return true;
+    } else {
+        return false;
+        throw std::length_error("Element already exists");
     }
 }
 
 template <typename Data>
-void BST<Data>::Remove(const Data& data) noexcept {
-    delete Detach(FindPointerTo(root, data));
+bool BST<Data>::Remove(const Data& data) {
+    if (FindPointerTo(root, data) == nullptr) {
+        throw std::length_error("Element not found");
+    } else {
+        delete Detach(FindPointerTo(root, data));
+        return true;
+    }
 }
 
 /* ************************************************************************ */
@@ -198,7 +211,7 @@ typename BST<Data>::NodeLnk* BST<Data>::DetachMax(NodeLnk*& node) noexcept {
 }
 
 template <typename Data>
-typename BST<Data>::NodeLnk* BST<Data>::Skip2Left(NodeLnk* node) noexcept {
+typename BST<Data>::NodeLnk* BST<Data>::Skip2Left(typename BST<Data>::NodeLnk* node) noexcept {
     NodeLnk* newleft = nullptr;
     if (node != nullptr) {
         std::swap(newleft, node->left);
@@ -209,7 +222,7 @@ typename BST<Data>::NodeLnk* BST<Data>::Skip2Left(NodeLnk* node) noexcept {
 }
 
 template <typename Data>
-typename BST<Data>::NodeLnk* BST<Data>::Skip2Right(NodeLnk* node) noexcept {
+typename BST<Data>::NodeLnk* BST<Data>::Skip2Right(typename BST<Data>::NodeLnk* node) noexcept {
     NodeLnk* newright = nullptr;
     if (node != nullptr) {
         std::swap(newright, node->right);
@@ -220,12 +233,12 @@ typename BST<Data>::NodeLnk* BST<Data>::Skip2Right(NodeLnk* node) noexcept {
 }
 
 template <typename Data>
-typename BST<Data>::NodeLnk* BST<Data>::FindPointerToMin(NodeLnk* node) noexcept {
-    return const_cast<NodeLnk*>(static_cast<const BST<Data*> (this)->FindPointerToMin(node));
+typename BST<Data>::NodeLnk*& BST<Data>::FindPointerToMin(typename BST<Data>::NodeLnk*& node) noexcept {
+    return const_cast<NodeLnk*&>(static_cast<const BST<Data>*>(this)->FindPointerToMin(node));
 }
 
 template <typename Data>
-const typename BST<Data>::NodeLnk* BST<Data>::FindPointerToMin(const NodeLnk* node) const noexcept {
+const typename BST<Data>::NodeLnk* const& BST<Data>::FindPointerToMin(const NodeLnk* const& node) const noexcept {
     const NodeLnk* const* nodeptr = &node;
     const NodeLnk* current = node;
     if (current != nullptr) {
@@ -238,12 +251,12 @@ const typename BST<Data>::NodeLnk* BST<Data>::FindPointerToMin(const NodeLnk* no
 }
 
 template <typename Data>
-typename BST<Data>::NodeLnk* BST<Data>::FindPointerToMax(NodeLnk* node) noexcept {
-    return const_cast<NodeLnk*>(static_cast<const BST<Data*> (this)->FindPointerToMax(node));
+typename BST<Data>::NodeLnk*& BST<Data>::FindPointerToMax(typename BST<Data>::NodeLnk*& node) noexcept {
+    return const_cast<NodeLnk*&>(static_cast<const BST<Data>*>(this)->FindPointerToMax(node));
 }
 
 template <typename Data>
-const typename BST<Data>::NodeLnk* BST<Data>::FindPointerToMax(const NodeLnk* node) const noexcept {
+const typename BST<Data>::NodeLnk* const& BST<Data>::FindPointerToMax(const NodeLnk* const& node) const noexcept {
     const NodeLnk* const* nodeptr = &node;
     const NodeLnk* current = node;
     if (current != nullptr) {
@@ -256,12 +269,12 @@ const typename BST<Data>::NodeLnk* BST<Data>::FindPointerToMax(const NodeLnk* no
 }
 
 template <typename Data>
-typename BST<Data>::NodeLnk* BST<Data>::FindPointerTo(const Data& data, NodeLnk* node) noexcept {
-    return const_cast<NodeLnk*>(static_cast<const BST<Data*> (this)->FindPointerTo(data, node));
+typename BST<Data>::NodeLnk*& BST<Data>::FindPointerTo(typename BST<Data>::NodeLnk*& node, const Data& data) noexcept {
+    return const_cast<NodeLnk*&>(static_cast<const BST<Data>*>(this)->FindPointerTo(data, node));
 }
 
 template <typename Data>
-const typename BST<Data>::NodeLnk* BST<Data>::FindPointerTo(const Data& data, const NodeLnk* node) const noexcept {
+const typename BST<Data>::NodeLnk* const& BST<Data>::FindPointerTo(const NodeLnk* const& node, const Data& data) const noexcept {
     const NodeLnk* const* nodeptr = &node;
     const NodeLnk* current = node;
     while (current != nullptr) {
@@ -279,12 +292,12 @@ const typename BST<Data>::NodeLnk* BST<Data>::FindPointerTo(const Data& data, co
 }
 
 template <typename Data>
-typename BST<Data>::NodeLnk* BST<Data>::FindPointerToPredecessor(NodeLnk*& node, const Data& data) noexcept {
-    return const_cast<NodeLnk*>(static_cast<const BST<Data*> (this)->FindPointerToPredecessor(node, data));
+typename BST<Data>::NodeLnk** BST<Data>::FindPointerToPredecessor(NodeLnk*& node, const Data& data) noexcept {
+    return const_cast<NodeLnk*&>(static_cast<const BST<Data>*>(this)->FindPointerToPredecessor(node, data));
 }
 
 template <typename Data>
-const typename BST<Data>::NodeLnk* BST<Data>::FindPointerToPredecessor(const NodeLnk* node, const Data& data) const noexcept {
+const typename BST<Data>::NodeLnk* const* BST<Data>::FindPointerToPredecessor(const NodeLnk* const& node, const Data& data) const noexcept {
     const NodeLnk* const* nodeptr = &node;
     const NodeLnk* current = node;
     if (current != nullptr) {
@@ -294,6 +307,30 @@ const typename BST<Data>::NodeLnk* BST<Data>::FindPointerToPredecessor(const Nod
         }
     }
     return *nodeptr;
+}
+
+template <typename Data>
+typename BST<Data>::NodeLnk** BST<Data>::FindPointerToSuccessor(NodeLnk*& node, const Data& data) noexcept {
+    return const_cast<NodeLnk*&>(static_cast<const BST<Data>*>(this)->FindPointerToSuccessor(node, data));
+}
+
+template <typename Data>
+const typename BST<Data>::NodeLnk* const* BST<Data>::FindPointerToSuccessor(const NodeLnk* const& node, const Data& data) const noexcept {
+    const NodeLnk* const* nodeptr = &node;
+    const NodeLnk* const* nodeprd = nullptr;
+    while(true) {
+        const NodeLnk& current = **nodeptr;
+        if (current.element > data) {
+            nodeprd = nodeptr;
+            if (current.left == nullptr) { return nodeprd; }
+            else { nodeptr = &current.left; }
+        } else {
+            if (current.right == nullptr) { return nodeprd; }
+            else {
+                if (current.element < data) { return &FindPointerToMin(current.right); }
+            }
+        }
+    }
 }
 
 /* ************************************************************************** */

@@ -199,15 +199,19 @@ void BinaryTreeVec<Data>::BreadthMap(typename MappableContainer<Data>::MapFun ma
 // Auxiliary functions
 template <typename Data>
 void BinaryTreeVec<Data>::BreadthTraverse(typename TraversableContainer<Data>::TraverseFun travFun, const Node& node) const {
-    
+    if (&node != nullptr) {
+        travFun(node.Element());
+        if (node.HasLeftChild()) { BreadthTraverse(travFun, node.LeftChild()); }
+        if (node.HasRightChild()) { BreadthTraverse(travFun, node.RightChild()); }
+    }
 }
 
 template <typename Data>
 void BinaryTreeVec<Data>::BreadthMap(typename MappableContainer<Data>::MapFun mapFun, Node& node) {
-    if (node != nullptr) {
-        travFun(node.Element());
-        if (node.HasLeftChild()) { BreadthMap(mapFun, node.LeftChild()); }
-        if (node.HasRightChild()) { BreadthMap(mapFun, node.RightChild()); }
+    if (&node != nullptr) {
+        mapFun(const_cast<Data&>(node.Element()) );
+        if (node.HasLeftChild()) { BreadthMap(mapFun, const_cast<Node&>(node.LeftChild()) ); }
+        if (node.HasRightChild()) { BreadthMap(mapFun, const_cast<Node&>(node.RightChild()) ); }
     }
 }
 

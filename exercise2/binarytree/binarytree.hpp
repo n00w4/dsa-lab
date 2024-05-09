@@ -65,7 +65,7 @@ public:
     virtual const Data& Element() const noexcept = 0;
 
     // IsLeaf() specifiers; // (concrete function should not throw exceptions)
-    virtual bool IsLeaf() const noexcept = 0;
+    virtual bool IsLeaf() const noexcept { return !(HasLeftChild() || HasRightChild()); };
     
     // HasLeftChild() specifiers; // (concrete function should not throw exceptions)
     virtual bool HasLeftChild() const noexcept = 0;
@@ -265,9 +265,9 @@ public:
 protected:
 
   // Auxiliary functions
-  virtual void PreOrderMap(MapFun, Node&);
-  virtual void PostOrderMap(MapFun, Node&);
-  virtual void InOrderMap(MapFun, Node&);
+  //virtual void PreOrderMap(MapFun, Node&);
+  //virtual void PostOrderMap(MapFun, Node&);
+  //virtual void InOrderMap(MapFun, Node&);
   virtual void BreadthMap(MapFun, Node&);
 
 };
@@ -807,7 +807,7 @@ public:
 
   // operator*() specifiers; // (throw std::out_of_range when terminated)
   const Data& operator*() const override {
-    if (!queue.Empty()) { return queue.Head(); }
+    if (!queue.Empty()) { return queue.Head()->Element(); }
     else { throw std::out_of_range("Iterator terminated"); }
   };
 

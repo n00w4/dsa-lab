@@ -63,7 +63,7 @@ public:
   using BinaryTreeLnk<Data>::operator==;
   bool operator==(const BST&) const noexcept;
   
-  using BinaryTreeLnk<Data>::operator==; 
+  using BinaryTreeLnk<Data>::operator!=; 
   inline bool operator!=(const BST&) const noexcept;
 
   /* ************************************************************************ */

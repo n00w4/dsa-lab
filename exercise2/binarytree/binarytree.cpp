@@ -51,7 +51,7 @@ void BinaryTree<Data>::BreadthTraverse(TraverseFun travFun) const {
 // Auxiliary function
 template <typename Data>
 void BinaryTree<Data>::BreadthTraverse(typename TraversableContainer<Data>::TraverseFun travFun, const Node& node) const {
-    if (node != nullptr) {
+    if (&node != nullptr) {
         travFun(node.Element());
         if (node.HasLeftChild()) { BreadthTraverse(travFun, node.LeftChild()); }
         if (node.HasRightChild()) { BreadthTraverse(travFun, node.RightChild()); }
@@ -70,11 +70,11 @@ void MutableBinaryTree<Data>::BreadthMap(typename MappableContainer<Data>::MapFu
 // Auxiliary function
 template <typename Data>
 void MutableBinaryTree<Data>::BreadthMap(typename MappableContainer<Data>::MapFun mapFun, Node& node) {
-    //if (node != nullptr) {
-        mapFun(node.Element());
-        if (node.HasLeftChild()) { BreadthMap(mapFun, node.LeftChild()); }
-        if (node.HasRightChild()) { BreadthMap(mapFun, node.RightChild()); }
-    //}
+    if (&node != nullptr) {
+        mapFun(const_cast<Data&>(node.Element()));
+        if (node.HasLeftChild()) { BreadthMap(mapFun, const_cast<Node&>(node.LeftChild()) ); }
+        if (node.HasRightChild()) { BreadthMap(mapFun, const_cast<Node&>(node.RightChild()) ); }
+    }
 }
 
 /* ************************************************************************** */
