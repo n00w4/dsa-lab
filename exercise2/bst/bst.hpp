@@ -13,7 +13,7 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class BST: virtual public ClearableContainer, virtual public DictionaryContainer<Data>, virtual protected BinaryTreeLnk<Data> {
+class BST: virtual public ClearableContainer, virtual public DictionaryContainer<Data>, virtual public BinaryTree<Data>, virtual protected BinaryTreeLnk<Data> {
 
 private:
 
@@ -132,13 +132,13 @@ public:
 
 protected:
 
-  // Auxiliary functions, if necessary!
+  // Auxiliary functions
 
   // DataNDelete(argument) specifiers;
-  Data DataNDelete(const NodeLnk*);
+  Data DataNDelete(NodeLnk*);
 
   // Detach(argument) specifiers;
-  NodeLnk* Detach(const NodeLnk*&) noexcept;
+  NodeLnk* Detach(NodeLnk*&) noexcept;
 
   // DetachMin(argument) specifiers;
   NodeLnk* DetachMin(NodeLnk*&) noexcept;
@@ -146,9 +146,9 @@ protected:
   NodeLnk* DetachMax(NodeLnk*&) noexcept;
 
   // Skip2Left(argument) specifiers;
-  NodeLnk* Skip2Left(NodeLnk*) noexcept;
+  NodeLnk* Skip2Left(NodeLnk*&) noexcept;
   // Skip2Right(argument) specifiers;
-  NodeLnk* Skip2Right(NodeLnk*) noexcept;
+  NodeLnk* Skip2Right(NodeLnk*&) noexcept;
 
   // FindPointerToMin(argument) specifiers; // Both mutable & unmutable versions
   NodeLnk*& FindPointerToMin(NodeLnk*&) noexcept;
