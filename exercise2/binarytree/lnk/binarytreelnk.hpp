@@ -84,6 +84,7 @@ protected:
   };
 
   NodeLnk* root = nullptr;
+  NodeLnk* CopyTree(NodeLnk*);
 
 public:
 

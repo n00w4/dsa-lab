@@ -63,7 +63,7 @@ protected:
 
   };
 
-  Vector<NodeVec*> *treevector = nullptr;
+  Vector<NodeVec*>* treevector = nullptr;
 
 public:
 

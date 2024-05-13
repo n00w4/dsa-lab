@@ -327,8 +327,15 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const BTPreOrderIterator&) const noexcept = default;
-  bool operator!=(const BTPreOrderIterator&) const noexcept = default;
+  bool operator==(const BTPreOrderIterator& iter) const noexcept {
+    if(root != iter.root) { return false; }
+    if(stack != iter.stack) { return false; }
+    return true;
+  };
+
+  bool operator!=(const BTPreOrderIterator& iter) const noexcept {
+    return !(*this == iter);
+  };
 
   /* ************************************************************************ */
 
@@ -351,9 +358,10 @@ public:
 
   // operator++() specifiers; // (throw std::out_of_range when terminated)
   ForwardIterator<Data>& operator++() override {
+    if (Terminated()) { throw std::out_of_range("Iterator terminated"); }
     const typename BinaryTree<Data>::Node& node = *stack.TopNPop();
-    if (node.HasLeftChild()) { stack.Push(&node.LeftChild()); }
     if (node.HasRightChild()) { stack.Push(&node.RightChild()); }
+    if (node.HasLeftChild()) { stack.Push(&node.LeftChild()); }
     return *this;
   };
 
@@ -416,8 +424,12 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const BTPreOrderMutableIterator&) const noexcept = default;
-  bool operator!=(const BTPreOrderMutableIterator&) const noexcept = default;
+  bool operator==(const BTPreOrderMutableIterator& iter) const noexcept {
+    return BTPreOrderIterator<Data>::operator==(iter);
+  };
+  bool operator!=(const BTPreOrderMutableIterator& iter) const noexcept {
+    return BTPreOrderIterator<Data>::operator!=(iter);
+  };
 
   /* ************************************************************************ */
 
@@ -441,6 +453,7 @@ private:
 protected:
 
   const typename BinaryTree<Data>::Node* root = nullptr;
+  const typename BinaryTree<Data>::Node* last = nullptr;
   StackLst<const typename BinaryTree<Data>::Node*> stack;
 
 public:
@@ -449,17 +462,20 @@ public:
   // An iterator over a given binary tree
   BTPostOrderIterator(const BinaryTree<Data>& bt) {
     if (!bt.Empty()) { stack.Push(root = &bt.Root()); }
+    GetMostLeftLeaf();
+    last = root;
   };
 
   /* ************************************************************************ */
 
   // Copy constructor
-  BTPostOrderIterator(const BTPostOrderIterator& iter) : root(iter.root), stack(iter.stack) {};
+  BTPostOrderIterator(const BTPostOrderIterator& iter) : root(iter.root), stack(iter.stack), last(iter.last) {};
 
   // Move constructor
   BTPostOrderIterator(BTPostOrderIterator&& iter) noexcept {
     std::swap(root, iter.root);
-    std::swap(stack, iter.stack);
+    std::swap(last, iter.last);
+    stack = std::move(iter.stack);
   };
 
   /* ************************************************************************ */
@@ -472,20 +488,29 @@ public:
   // Copy assignment
   BTPostOrderIterator& operator=(const BTPostOrderIterator& iter) {
     root = iter.root;
+    last = iter.last;
     stack = iter.stack;
   };
 
   // Move assignment
   BTPostOrderIterator& operator=(BTPostOrderIterator&& iter) {
     std::swap(root, iter.root);
+    std::swap(last, iter.last);
     std::swap(stack, iter.stack);
   };
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const BTPostOrderIterator&) const noexcept = default;
-  bool operator!=(const BTPostOrderIterator&) const noexcept = default;
+  bool operator==(const BTPostOrderIterator& iter) const noexcept {
+    if(root != iter.root) { return false; }
+    if(last != iter.last) { return false; }
+    if(stack != iter.stack) { return false; }
+    return true;
+  };
+  bool operator!=(const BTPostOrderIterator&) const noexcept {
+    return !(*this == *this);
+  };
 
   /* ************************************************************************ */
 
@@ -493,13 +518,13 @@ public:
 
   // operator*() specifiers; // (throw std::out_of_range when terminated)
   const Data& operator*() const override {
-    if (!stack.Empty()) { return stack.Top()->Element(); }
+    if (!(Terminated())) { return root->Element(); }
     else { throw std::out_of_range("Iterator terminated"); }
   };
 
   // Terminated() specifiers; // (should not throw exceptions)
   bool Terminated() const noexcept override {
-    return stack.Empty();
+    return stack.Empty(); 
   };
 
   /* ************************************************************************ */
@@ -508,9 +533,19 @@ public:
 
   // operator++() specifiers; // (throw std::out_of_range when terminated)
   ForwardIterator<Data>& operator++() override {
-    const typename BinaryTree<Data>::Node& node = *stack.TopNPop();
-    if (node.HasLeftChild()) { stack.Push(&node.LeftChild()); }
-    if (node.HasRightChild()) { stack.Push(&node.RightChild()); }
+    if (Terminated()) { throw std::out_of_range("Iterator terminated"); }
+    if (stack.Empty()) {
+      root = nullptr;
+      last = nullptr;
+    } else {
+      root = stack.TopNPop();
+      if (root->HasRightChild() && !(&(root->RightChild()) == last)) {
+        stack.Push(root);
+        root = &(root->RightChild());
+        GetMostLeftLeaf();
+      }
+    }
+    last = root;
     return *this;
   };
 
@@ -525,6 +560,23 @@ public:
       stack.Push(root);
     }
   };
+
+  // GetMostLeftLeaf auxiliary function
+  void GetMostLeftLeaf() {
+    if(root == nullptr)
+        return;
+
+    while (root->HasLeftChild()) {
+        stack.Push(root);
+        root = &(root->LeftChild());
+    }
+
+    if(root->HasRightChild()) {
+        stack.Push(root);
+        root = &(root->RightChild());
+        GetMostLeftLeaf();
+    }
+}
 
 };
 
@@ -573,8 +625,12 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const BTPostOrderMutableIterator&) const noexcept = default;
-  bool operator!=(const BTPostOrderMutableIterator&) const noexcept = default;
+  bool operator==(const BTPostOrderMutableIterator& iter) const noexcept {
+    return BTPostOrderIterator<Data>::operator==(iter);
+  };
+  bool operator!=(const BTPostOrderMutableIterator& iter) const noexcept {
+    return BTPostOrderIterator<Data>::operator!=(iter);
+  };
 
   /* ************************************************************************ */
 
@@ -606,6 +662,7 @@ public:
   // An iterator over a given binary tree
   BTInOrderIterator(const BinaryTree<Data>& bt) {
     if (!bt.Empty()) { stack.Push(root = &bt.Root()); }
+    GetMostLeftNode();
   };
 
   /* ************************************************************************ */
@@ -616,7 +673,7 @@ public:
   // Move constructor
   BTInOrderIterator(BTInOrderIterator&& iter) noexcept {
     std::swap(root, iter.root);
-    std::swap(stack, iter.stack);
+    stack = std::move(iter.stack);
   }
 
   /* ************************************************************************ */
@@ -630,19 +687,27 @@ public:
   BTInOrderIterator& operator=(const BTInOrderIterator& iter) {
     root = iter.root;
     stack = iter.stack;
+    return *this;
   };
 
   // Move assignment
   BTInOrderIterator& operator=(BTInOrderIterator&& iter) noexcept {
     std::swap(root, iter.root);
-    std::swap(stack, iter.stack);
+    stack = std::move(iter.stack);
+    return *this;
   };
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const BTInOrderIterator&) const noexcept = default;
-  bool operator!=(const BTInOrderIterator&) const noexcept = default;
+  bool operator==(const BTInOrderIterator& iter) const noexcept {
+    if(root != iter.root) { return false; }
+    if(stack != iter.stack) { return false; }
+    return true;
+  };
+  bool operator!=(const BTInOrderIterator& iter) const noexcept {
+    return !(*this == iter);
+  };
 
   /* ************************************************************************ */
 
@@ -665,9 +730,12 @@ public:
 
   // operator++() specifiers; // (throw std::out_of_range when terminated)
   ForwardIterator<Data>& operator++() override {
+    if (Terminated()) { throw std::out_of_range("Iterator terminated"); }
     const typename BinaryTree<Data>::Node& node = *stack.TopNPop();
-    if (node.HasLeftChild()) { stack.Push(&node.LeftChild()); }
-    if (node.HasRightChild()) { stack.Push(&node.RightChild()); }
+    if (node.HasRightChild()) {
+      stack.Push(&node.RightChild());
+      GetMostLeftNode();
+    }
     return *this;
   };
 
@@ -678,11 +746,20 @@ public:
   // Reset() specifiers; // (should not throw exceptions)
   void Reset() noexcept override {
     if (root != nullptr) {
-      stack.Push(root);
       stack.Clear();
+      stack.Push(root);
     }
   };
 
+  // GetMostLeftNode auxiliary function
+  void GetMostLeftNode() {
+    if(root == nullptr)
+        return;
+    while (root->HasLeftChild()) {
+      stack.Push(root);
+      root = &(root->LeftChild());
+    }
+}
 };
 
 /* ************************************************************************** */
@@ -730,8 +807,12 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const BTInOrderMutableIterator<Data>&) const noexcept = default;
-  bool operator!=(const BTInOrderMutableIterator<Data>&) const noexcept = default;
+  bool operator==(const BTInOrderMutableIterator<Data>& iter) const noexcept {
+    return BTInOrderIterator<Data>::operator==(iter);
+  };
+  bool operator!=(const BTInOrderMutableIterator<Data>& iter) const noexcept {
+    return BTInOrderIterator<Data>::operator!=(iter);
+  };
 
   /* ************************************************************************ */
 
@@ -773,7 +854,7 @@ public:
   // Move constructor
   BTBreadthIterator(BTBreadthIterator&& iter) noexcept {
     std::swap(root, iter.root);
-    std::swap(queue, iter.queue);
+    queue = std::move(iter.queue);
   };
 
   /* ************************************************************************ */
@@ -787,19 +868,27 @@ public:
   BTBreadthIterator& operator=(const BTBreadthIterator& iter) {
     root = iter.root;
     queue = iter.queue;
+    return *this;
   };
 
   // Move assignment
   BTBreadthIterator& operator=(BTBreadthIterator&& iter) noexcept {
     std::swap(root, iter.root);
-    std::swap(queue, iter.queue);
+    queue = std::move(iter.queue);
+    return *this;
   };
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const BTBreadthIterator<Data>&) const noexcept = default;
-  bool operator!=(const BTBreadthIterator<Data>&) const noexcept = default;
+  bool operator==(const BTBreadthIterator<Data>& iter) const noexcept {
+    if(root != iter.root) { return false; }
+    if(queue != iter.queue) { return false; }
+    return true;
+  };
+  bool operator!=(const BTBreadthIterator<Data>& iter) const noexcept {
+    return !(*this == iter);
+  };
 
   /* ************************************************************************ */
 
@@ -822,6 +911,7 @@ public:
 
   // operator++() specifiers; // (throw std::out_of_range when terminated)
   ForwardIterator<Data>& operator++() override {
+    if (queue.Empty()) { throw std::out_of_range("Iterator terminated"); }
     const typename BinaryTree<Data>::Node& node = *queue.HeadNDequeue();
     if (node.HasLeftChild()) { queue.Enqueue(&node.LeftChild()); }
     if (node.HasRightChild()) { queue.Enqueue(&node.RightChild()); }
@@ -887,8 +977,12 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const BTBreadthMutableIterator<Data>&) const noexcept = default;
-  bool operator!=(const BTBreadthMutableIterator<Data>&) const noexcept = default;
+  bool operator==(const BTBreadthMutableIterator<Data>& iter) const noexcept {
+    return BTBreadthIterator<Data>::operator==(iter);
+  };
+  bool operator!=(const BTBreadthMutableIterator<Data>& iter) const noexcept {
+    return !(*this == iter);
+  };
 
   /* ************************************************************************ */
 
@@ -896,7 +990,7 @@ public:
 
   // operator*() specifiers; // (throw std::out_of_range when terminated)
   Data& operator*() override {
-    if (!queue.Empty()) { return const_cast<Data&>(queue.Head()); }
+    if (!queue.Empty()) { return const_cast<Data&>(queue.Head()->Element()); }
     else { throw std::out_of_range("Iterator terminated"); }
   };
 
