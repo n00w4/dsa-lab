@@ -112,43 +112,43 @@ public:
   using typename TraversableContainer<Data>::TraverseFun;
 
   // Traverse(arguments) specifiers; // Override TraversableContainer member
-  void Traverse(TraverseFun travFun) const override;
+  inline void Traverse(TraverseFun) const override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PreOrderTraversableContainer)
 
   // PreOrderTraverse(arguments) specifiers; // Override PreOrderTraversableContainer member
-  void PreOrderTraverse(TraverseFun travFun) const override;
+  inline void PreOrderTraverse(TraverseFun) const override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderTraversableContainer)
 
   // PostOrderTraverse(arguments) specifiers; // Override PostOrderTraversableContainer member
-  void PostOrderTraverse(TraverseFun travFun) const override;
+  inline void PostOrderTraverse(TraverseFun) const override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from InOrderTraversableContainer)
 
   // InOrderTraverse(arguments) specifiers; // Override InOrderTraversableContainer member
-  void InOrderTraverse(TraverseFun travFun) const override;
+  inline void InOrderTraverse(TraverseFun) const override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from BreadthTraversableContainer)
 
   // BreadthTraverse(arguments) specifiers; // Override BreadthTraversableContainer member
-  void BreadthTraverse(TraverseFun travFun) const override;
+  void BreadthTraverse(TraverseFun) const override;
 
 protected:
 
   // Auxiliary functions
-  // virtual void PreOrderTraverse(TraverseFun, const Node&) const;
-  // virtual void PostOrderTraverse(TraverseFun, const Node&) const;
-  // virtual void InOrderTraverse(TraverseFun, const Node&) const;
-  virtual void BreadthTraverse(TraverseFun, const Node&) const;
+  void PreOrderTraverse(TraverseFun, const Node&) const;
+  void PostOrderTraverse(TraverseFun, const Node&) const;
+  void InOrderTraverse(TraverseFun, const Node&) const;
+  void BreadthTraverse(TraverseFun, const Node&) const;
 
 };
 
@@ -232,28 +232,28 @@ public:
   using typename MappableContainer<Data>::MapFun;
 
   // Override MappableContainer member
-  void Map(MapFun) override;
+  inline void Map(MapFun) override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PreOrderMappableContainer)
 
   // Override PreOrderMappableContainer member
-  void PreOrderMap(MapFun) override;
+  inline void PreOrderMap(MapFun) override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderMappableContainer)
 
   // Override PostOrderMappableContainer member
-  void PostOrderMap(MapFun) override;
+  inline void PostOrderMap(MapFun) override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from InOrderMappableContainer)
 
   // Override InOrderMappableContainer member
-  void InOrderMap(MapFun) override;
+  inline void InOrderMap(MapFun) override;
 
   /* ************************************************************************ */
 
@@ -265,10 +265,10 @@ public:
 protected:
 
   // Auxiliary functions
-  //virtual void PreOrderMap(MapFun, Node&);
-  //virtual void PostOrderMap(MapFun, Node&);
-  //virtual void InOrderMap(MapFun, Node&);
-  virtual void BreadthMap(MapFun, Node&);
+  void PreOrderMap(MapFun, MutableNode&);
+  void PostOrderMap(MapFun, MutableNode&);
+  void InOrderMap(MapFun, MutableNode&);
+  void BreadthMap(MapFun, MutableNode&);
 
 };
 

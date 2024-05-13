@@ -201,8 +201,7 @@ bool BST<Data>::Exists(const Data& data) const noexcept {
 // Auxiliary function
 template <typename Data>
 Data BST<Data>::DataNDelete(NodeLnk *node) {
-    Data dat;
-    std::swap(dat, node->element);
+    Data dat = std::move(node->element);
     delete node;
     return dat;
 }

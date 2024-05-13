@@ -5,12 +5,6 @@ namespace lasd {
 
 // NodeLnk
 
-// Specific constructor
-template <typename Data>
-BinaryTreeLnk<Data>::NodeLnk::NodeLnk(Data&& data) noexcept {
-    std::swap(element, data);
-}
-
 // Copy constructor
 template <typename Data>
 BinaryTreeLnk<Data>::NodeLnk::NodeLnk(const NodeLnk& node) {

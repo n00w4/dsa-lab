@@ -3,12 +3,6 @@ namespace lasd {
 
 /* ************************************************************************** */
 
-// Node specific constructor
-template <typename Data>
-inline List<Data>::Node::Node(Data&& data) noexcept {
-    std::swap(element, data);
-}
-
 // Node move constructor
 template <typename Data>
 inline List<Data>::Node::Node(Node&& node) noexcept {

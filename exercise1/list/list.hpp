@@ -36,7 +36,7 @@ protected:
 
     // Specific constructors
     inline Node(const Data& data) : element(data) {};
-    inline Node(Data&&) noexcept;
+    inline Node(Data&& data) noexcept : element(std::move(data)) {};
 
     /* ********************************************************************** */
 

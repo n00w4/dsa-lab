@@ -37,7 +37,7 @@ protected:
 
     // Specific constructors
     NodeLnk(const Data& data) noexcept : element(data) {}
-    NodeLnk(Data&&) noexcept;
+    NodeLnk(Data&&) noexcept : element(std::move(element)) {};
 
     // Copy constructor
     NodeLnk(const NodeLnk&);
