@@ -660,10 +660,9 @@ public:
 
   // Specific constructors
   // An iterator over a given binary tree
-  BTInOrderIterator(const BinaryTree<Data>& bt) {
-    if (!bt.Empty()) { stack.Push(root = &bt.Root()); }
-    GetMostLeftNode();
-  };
+    BTInOrderIterator(const BinaryTree<Data>& bt) {
+      if (!bt.Empty()) { stack.Push(root = &bt.Root()); }
+    };
 
   /* ************************************************************************ */
 
@@ -671,10 +670,7 @@ public:
   BTInOrderIterator(const BTInOrderIterator& iter) : root(iter.root), stack(iter.stack) {};
 
   // Move constructor
-  BTInOrderIterator(BTInOrderIterator&& iter) noexcept {
-    std::swap(root, iter.root);
-    stack = std::move(iter.stack);
-  }
+  BTInOrderIterator(BTInOrderIterator&& iter) noexcept : root(std::move(iter.root)), stack(std::move(iter.stack)) {}
 
   /* ************************************************************************ */
 
@@ -692,7 +688,7 @@ public:
 
   // Move assignment
   BTInOrderIterator& operator=(BTInOrderIterator&& iter) noexcept {
-    std::swap(root, iter.root);
+    std::move(root, iter.root);
     stack = std::move(iter.stack);
     return *this;
   };
@@ -759,7 +755,7 @@ public:
       stack.Push(root);
       root = &(root->LeftChild());
     }
-}
+  }
 };
 
 /* ************************************************************************** */

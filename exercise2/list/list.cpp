@@ -196,7 +196,7 @@ Data List<Data>::FrontNRemove() {
         Node* front = head;
         if (head == tail) { head = tail = nullptr; }
         else { head = head->next; }
-        size--;
+        --size;
         front->next = nullptr;
         Data dataToReturn(std::move(front->element));
         delete front;
