@@ -461,9 +461,10 @@ public:
   // Specific constructors
   // An iterator over a given binary tree
   BTPostOrderIterator(const BinaryTree<Data>& bt) {
-    if (!bt.Empty()) { stack.Push(root = &bt.Root()); }
-    GetMostLeftLeaf();
-    last = root;
+    if (!bt.Empty()) {
+      root = &bt.Root();
+      GetMostLeftLeaf(bt.Root());
+    }
   };
 
   /* ************************************************************************ */
@@ -475,7 +476,7 @@ public:
   BTPostOrderIterator(BTPostOrderIterator&& iter) noexcept {
     std::swap(root, iter.root);
     std::swap(last, iter.last);
-    stack = std::move(iter.stack);
+    std::swap(stack, iter.stack);
   };
 
   /* ************************************************************************ */
@@ -490,6 +491,7 @@ public:
     root = iter.root;
     last = iter.last;
     stack = iter.stack;
+    return *this;
   };
 
   // Move assignment
@@ -497,6 +499,7 @@ public:
     std::swap(root, iter.root);
     std::swap(last, iter.last);
     std::swap(stack, iter.stack);
+    return *this;
   };
 
   /* ************************************************************************ */
@@ -508,8 +511,8 @@ public:
     if(stack != iter.stack) { return false; }
     return true;
   };
-  bool operator!=(const BTPostOrderIterator&) const noexcept {
-    return !(*this == *this);
+  bool operator!=(const BTPostOrderIterator& iter) const noexcept {
+    return !(*this == iter);
   };
 
   /* ************************************************************************ */
@@ -518,7 +521,7 @@ public:
 
   // operator*() specifiers; // (throw std::out_of_range when terminated)
   const Data& operator*() const override {
-    if (!(Terminated())) { return root->Element(); }
+    if (!(Terminated())) { return stack.Top()->Element(); }
     else { throw std::out_of_range("Iterator terminated"); }
   };
 
@@ -534,18 +537,11 @@ public:
   // operator++() specifiers; // (throw std::out_of_range when terminated)
   ForwardIterator<Data>& operator++() override {
     if (Terminated()) { throw std::out_of_range("Iterator terminated"); }
-    if (stack.Empty()) {
-      root = nullptr;
-      last = nullptr;
-    } else {
-      root = stack.TopNPop();
-      if (root->HasRightChild() && !(&(root->RightChild()) == last)) {
-        stack.Push(root);
-        root = &(root->RightChild());
-        GetMostLeftLeaf();
-      }
+    last = stack.TopNPop();
+    if (!stack.Empty() && stack.Top()->HasRightChild() && &(stack.Top()->RightChild()) != last) {
+      GetMostLeftLeaf(stack.Top()->RightChild());
     }
-    last = root;
+    return *this;
     return *this;
   };
 
@@ -558,25 +554,26 @@ public:
     if (root != nullptr) {
       stack.Clear();
       stack.Push(root);
+      GetMostLeftLeaf(*root);
+      last = root;
     }
   };
 
+protected:
   // GetMostLeftLeaf auxiliary function
-  void GetMostLeftLeaf() {
-    if(root == nullptr)
-        return;
-
-    while (root->HasLeftChild()) {
-        stack.Push(root);
-        root = &(root->LeftChild());
+  void GetMostLeftLeaf(const typename BinaryTree<Data>::Node& node) {
+    const typename BinaryTree<Data>::Node* current = &node;
+    while (current != nullptr) {
+        stack.Push(current);
+        if (current->HasLeftChild()) {
+            current = &(current->LeftChild());
+        } else if (current->HasRightChild()) {
+            current = &(current->RightChild());
+        } else {
+            current = nullptr;
+        }
     }
-
-    if(root->HasRightChild()) {
-        stack.Push(root);
-        root = &(root->RightChild());
-        GetMostLeftLeaf();
-    }
-}
+  }
 
 };
 
@@ -660,9 +657,12 @@ public:
 
   // Specific constructors
   // An iterator over a given binary tree
-    BTInOrderIterator(const BinaryTree<Data>& bt) {
-      if (!bt.Empty()) { stack.Push(root = &bt.Root()); }
-    };
+  BTInOrderIterator(const BinaryTree<Data>& bt) {
+    if (!bt.Empty()) {
+      root = &bt.Root();
+      GetMostLeftNode(bt.Root());
+    }
+  };
 
   /* ************************************************************************ */
 
@@ -670,7 +670,10 @@ public:
   BTInOrderIterator(const BTInOrderIterator& iter) : root(iter.root), stack(iter.stack) {};
 
   // Move constructor
-  BTInOrderIterator(BTInOrderIterator&& iter) noexcept : root(std::move(iter.root)), stack(std::move(iter.stack)) {}
+  BTInOrderIterator(BTInOrderIterator&& iter) noexcept {
+    std::swap(root, iter.root);
+    std::swap(stack, iter.stack);
+  }
 
   /* ************************************************************************ */
 
@@ -681,15 +684,19 @@ public:
 
   // Copy assignment
   BTInOrderIterator& operator=(const BTInOrderIterator& iter) {
-    root = iter.root;
-    stack = iter.stack;
+    if (this != &iter) {
+      root = iter.root;
+      stack = iter.stack;
+    }
     return *this;
   };
 
   // Move assignment
   BTInOrderIterator& operator=(BTInOrderIterator&& iter) noexcept {
-    std::move(root, iter.root);
-    stack = std::move(iter.stack);
+    if (this != &iter) {
+      root = std::move(iter.root);
+      stack = std::move(iter.stack);
+    }
     return *this;
   };
 
@@ -697,9 +704,7 @@ public:
 
   // Comparison operators
   bool operator==(const BTInOrderIterator& iter) const noexcept {
-    if(root != iter.root) { return false; }
-    if(stack != iter.stack) { return false; }
-    return true;
+    return (root == iter.root) && (stack == iter.stack);
   };
   bool operator!=(const BTInOrderIterator& iter) const noexcept {
     return !(*this == iter);
@@ -729,8 +734,7 @@ public:
     if (Terminated()) { throw std::out_of_range("Iterator terminated"); }
     const typename BinaryTree<Data>::Node& node = *stack.TopNPop();
     if (node.HasRightChild()) {
-      stack.Push(&node.RightChild());
-      GetMostLeftNode();
+      GetMostLeftNode(node.RightChild());
     }
     return *this;
   };
@@ -743,19 +747,24 @@ public:
   void Reset() noexcept override {
     if (root != nullptr) {
       stack.Clear();
-      stack.Push(root);
+      GetMostLeftNode(*root);
     }
   };
 
+protected:
   // GetMostLeftNode auxiliary function
-  void GetMostLeftNode() {
-    if(root == nullptr)
-        return;
-    while (root->HasLeftChild()) {
-      stack.Push(root);
-      root = &(root->LeftChild());
+  void GetMostLeftNode(const typename BinaryTree<Data>::Node& node) {
+    const typename BinaryTree<Data>::Node* current = &node;
+    while (current != nullptr) {
+        stack.Push(current);
+        if (current->HasLeftChild()) {
+            current = &current->LeftChild();
+        } else {
+            current = nullptr;
+        }
     }
-  }
+}
+
 };
 
 /* ************************************************************************** */

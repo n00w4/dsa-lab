@@ -33,15 +33,12 @@ template <typename Data>
 typename BinaryTreeLnk<Data>::NodeLnk& BinaryTreeLnk<Data>::NodeLnk::operator=(const BinaryTreeLnk<Data>::NodeLnk& node) {
     if (this != &node) { // Check for self-assignment
         element = node.element;
-
         // Delete existing nodes
         delete left;
         delete right;
-
         // Copy nodes from 'node' if they exist and are not already visited
         if (node.left != nullptr && node.left != this) { left = new NodeLnk(*node.left); }
         else { left = nullptr; }
-
         if (node.right != nullptr && node.right != this) { right = new NodeLnk(*node.right); }
         else { right = nullptr; }
     }
@@ -170,9 +167,7 @@ BinaryTreeLnk<Data>::BinaryTreeLnk(MappableContainer<Data>&& mc) {
 template <typename Data>
 BinaryTreeLnk<Data>::BinaryTreeLnk(const BinaryTreeLnk<Data>& btl) {
     size = btl.size;
-    if (size > 0) {
-        root = CopyTree(btl.root);
-    }
+    if (size > 0) { root = CopyTree(btl.root); }
 }
 
 // Move constructor
