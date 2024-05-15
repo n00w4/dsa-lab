@@ -45,8 +45,6 @@ typename BinaryTreeLnk<Data>::NodeLnk& BinaryTreeLnk<Data>::NodeLnk::operator=(c
     return *this;
 }
 
-
-
 // Move assignment
 template <typename Data>
 typename BinaryTreeLnk<Data>::NodeLnk& BinaryTreeLnk<Data>::NodeLnk::operator=(NodeLnk&& node) noexcept {
@@ -127,39 +125,38 @@ inline typename BinaryTreeLnk<Data>::MutableNode& BinaryTreeLnk<Data>::NodeLnk::
 // CopyTree function
 template <typename Data>
 BinaryTreeLnk<Data>::NodeLnk* BinaryTreeLnk<Data>::CopyTree(NodeLnk *toBeCopied) {
-    NodeLnk* node = nullptr;
-    if(toBeCopied != nullptr) {
-        node = new NodeLnk(toBeCopied->element);
-        if(toBeCopied->left!=nullptr) { node->left = CopyTree(toBeCopied->left); }
-        if(toBeCopied->right!=nullptr) { node->right = CopyTree(toBeCopied->right); }
-    }
-    return node;
+    if (toBeCopied == nullptr) { return nullptr; }
+    NodeLnk* newNode = new NodeLnk(toBeCopied->element);
+    newNode->left = CopyTree(toBeCopied->left);
+    newNode->right = CopyTree(toBeCopied->right);
+
+    return newNode;
 }
 
 // Specific constructors
 template <typename Data>
 BinaryTreeLnk<Data>::BinaryTreeLnk(const TraversableContainer<Data>& tc) {
     size = tc.Size();
-    StackLst<NodeLnk**> stack;
-    stack.Push(&root);
-    tc.Traverse([&stack] (const Data& data) {
-        NodeLnk*& currentNode = *stack.Top();
+    QueueLst<NodeLnk**> queue;
+    queue.Enqueue(&root);
+    tc.Traverse([&queue] (const Data& data) {
+        NodeLnk*& currentNode = *queue.HeadNDequeue();
         currentNode = new NodeLnk(data);
-        stack.Push(&currentNode->left);
-        stack.Push(&currentNode->right);
+        queue.Enqueue(&currentNode->left);
+        queue.Enqueue(&currentNode->right);
     });
 }
 
 template <typename Data>
 BinaryTreeLnk<Data>::BinaryTreeLnk(MappableContainer<Data>&& mc) {
     size = mc.Size();
-    StackLst<NodeLnk**> stack;
-    stack.Push(&root);
-    mc.Map([&stack] (const Data& data) {
-        NodeLnk*& currentNode = *stack.Top();
+    QueueLst<NodeLnk**> queue;
+    queue.Enqueue(&root);
+    mc.Map([&queue] (const Data& data) {
+        NodeLnk*& currentNode = *queue.HeadNDequeue();
         currentNode = new NodeLnk(std::move(data));
-        stack.Push(&currentNode->left);
-        stack.Push(&currentNode->right);
+        queue.Enqueue(&currentNode->left);
+        queue.Enqueue(&currentNode->right);
     });
 }
 

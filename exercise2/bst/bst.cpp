@@ -5,6 +5,22 @@ namespace lasd {
 
 // BST
 
+// A bst obtained from a TraversableContainer
+template <typename Data>
+BST<Data>::BST(const TraversableContainer<Data>& tc) {
+    tc.Traverse([this](const Data& data) {
+        Insert(data);
+    });
+}
+
+// A bst obtained from a MappableContainer
+template <typename Data>
+BST<Data>::BST(MappableContainer<Data>&& mc) {
+    mc.Map([this](const Data& data) {
+        Insert(std::move(data));
+    });
+}
+
 // Copy assignment
 template <typename Data>
 BST<Data>& BST<Data>::operator=(const BST<Data>& bst){
@@ -26,9 +42,8 @@ bool BST<Data>::operator==(const BST &bt) const noexcept {
         if (size == 0) { return true; }
         BTInOrderIterator<Data> iterThis(*this);
         BTInOrderIterator<Data> iterOther(bt);
-        while (!iterThis.Terminated() && !iterOther.Terminated()){
-            if (*iterThis != *iterOther)
-                return false;
+        while (!iterThis.Terminated() && !iterOther.Terminated()) {
+            if (*iterThis != *iterOther) { return false; }
             ++iterThis;
             ++iterOther;
         }
@@ -355,7 +370,8 @@ const typename BST<Data>::NodeLnk* const* BST<Data>::FindPointerToSuccessor(cons
         } else {
             if (current.right == nullptr) { return nodeprd; }
             else {
-                if (current.element < data) { return &FindPointerToMin(current.right); }
+                if (current.element < data) { nodeptr = &current.right; }
+                else { return &FindPointerToMin(current.right); }
             }
         }
     }
