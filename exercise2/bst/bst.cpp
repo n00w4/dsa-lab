@@ -169,36 +169,36 @@ void BST<Data>::RemoveSuccessor(const Data& data) {
 // Specific member functions inherited from DictionaryContainer
 template <typename Data>
 bool BST<Data>::Insert(const Data& data) {
-    typename BST<Data>::NodeLnk*& pointer = FindPointerTo(root, data);
+    NodeLnk*& pointer = FindPointerTo(this->root, data);
     if (pointer == nullptr) {
-        pointer = new struct BST<Data>::NodeLnk(data);
-        size++;
+        pointer = new NodeLnk(data);
+        this->size++;
         return true;
     } else {
-        return false;
         throw std::length_error("Element already exists");
     }
 }
 
 template <typename Data>
 bool BST<Data>::Insert(Data&& data) {
-    typename BST<Data>::NodeLnk*& pointer = FindPointerTo(root, data);
+    NodeLnk*& pointer = FindPointerTo(this->root, data);
     if (pointer == nullptr) {
-        pointer = new struct BST<Data>::NodeLnk(std::move(data));
-        size++;
+        pointer = new NodeLnk(std::move(data));
+        this->size++;
         return true;
     } else {
-        return false;
         throw std::length_error("Element already exists");
     }
 }
 
 template <typename Data>
 bool BST<Data>::Remove(const Data& data) {
-    if (FindPointerTo(root, data) == nullptr) {
+    NodeLnk*& nodeToRemove = FindPointerTo(this->root, data);
+    if (nodeToRemove == nullptr) {
+        return false;
         throw std::length_error("Element not found");
     } else {
-        delete Detach(FindPointerTo(root, data));
+        delete Detach(nodeToRemove);
         return true;
     }
 }
@@ -229,7 +229,7 @@ typename BST<Data>::NodeLnk* BST<Data>::Detach(NodeLnk*& node) noexcept {
         else {
           // Doesn't matter when the node has right and left children
           // BST<Data>::NodeLnk* detach = DetachMin(node->right);
-             BST<Data>::NodeLnk* detach = DetachMax(node->left);
+            BST<Data>::NodeLnk* detach = DetachMax(node->left);
             std::swap(node->element, detach->element);
             return detach; 
         }
