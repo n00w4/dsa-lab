@@ -169,38 +169,31 @@ void BST<Data>::RemoveSuccessor(const Data& data) {
 // Specific member functions inherited from DictionaryContainer
 template <typename Data>
 bool BST<Data>::Insert(const Data& data) {
-    NodeLnk*& pointer = FindPointerTo(this->root, data);
+    NodeLnk*& pointer = FindPointerTo(root, data);
     if (pointer == nullptr) {
         pointer = new NodeLnk(data);
         this->size++;
         return true;
-    } else {
-        throw std::length_error("Element already exists");
-    }
+    } else { return false; }
 }
 
 template <typename Data>
 bool BST<Data>::Insert(Data&& data) {
-    NodeLnk*& pointer = FindPointerTo(this->root, data);
+    NodeLnk*& pointer = FindPointerTo(root, data);
     if (pointer == nullptr) {
         pointer = new NodeLnk(std::move(data));
         this->size++;
         return true;
-    } else {
-        throw std::length_error("Element already exists");
-    }
+    } else { return false; }
 }
 
 template <typename Data>
 bool BST<Data>::Remove(const Data& data) {
-    NodeLnk*& nodeToRemove = FindPointerTo(this->root, data);
-    if (nodeToRemove == nullptr) {
-        return false;
-        throw std::length_error("Element not found");
-    } else {
-        delete Detach(nodeToRemove);
-        return true;
-    }
+    NodeLnk*& nodeToRemove = FindPointerTo(root, data);
+    if (root == nullptr) { return false; }
+    if (nodeToRemove == nullptr) { return false; }
+    delete Detach(nodeToRemove);
+    return true;
 }
 
 /* ************************************************************************ */
