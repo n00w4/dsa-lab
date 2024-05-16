@@ -38,6 +38,7 @@
 // Useful functions from zlasdtest
 #include "../zlasdtest/container/mappable.hpp"
 #include "../zlasdtest/container/dictionary.hpp"
+#include "../zlasdtest/container/traversable.hpp"
 
 
 /* ************************************************************************** */
@@ -61,7 +62,7 @@ void RandomIntVector(lasd::LinearContainer<int> &lc) {
   std::cout << "Vector populated randomly in " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " µs" << endl;
 }
 
-// Resizes a vector with a random size vector with random data
+// Resizes a vector with a random size and random integers
 void RandomIntNSizeVector(lasd::Vector<int> &lc) {
   default_random_engine gen(random_device{}());
   uniform_int_distribution<uint> dist(1, 10000);
@@ -109,7 +110,7 @@ void RandomIntStack(lasd::Stack<int> &stack, uint stacksize) {
   std::cout << "Stack populated randomly in " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " µs" << endl;
 }
 
-// Resizes a stack with a random size stack with random data
+// Resizes a stack with a random size stack with random integers
 void RandomIntNSizeStack(lasd::Stack<int> &stack) {
   default_random_engine gen(random_device{}());
   uniform_int_distribution<uint> dist(1, 10000);
@@ -367,74 +368,176 @@ void TestEmptyTree(uint &loctest, uint &testerr) {
   
   if (tst) { std::cout << "#Test " << loctest << ": Empty tree test passed" << std::endl; }
   else { std::cout << "#Test " << loctest << ": Empty tree test failed" << std::endl; }
-  std::cout << endl;
 }
 
-// TO TEST
+// Tests duplicates in a binary tree
+ void TestDuplicateInsertion(uint &loctest, uint &testerr) {
+  bool tst = false;
+  loctest++;
+
+  lasd::List<int> lst;
+  lst.InsertAtBack(10);
+  lst.InsertAtBack(10);
+  
+  lasd::BST<int> bst(lst);
+  
+  short count = 0;
+  bst.Traverse([&count](const int& data) { data == 10 ? count++ : count; } );
+  
+  count == 1 ? tst = true : testerr++; // Only one 10 should exist
+
+  if (testerr == 0) { std::cout << "#Test " << loctest << ": Duplicate insertion test passed" << std::endl; }
+  else { std::cout << "#Test " << loctest << ": Duplicate insertion test failed" << std::endl; }
+}
+
+
 // Tests a tree with 1 node
 void TestSingleElementTree(uint &loctest, uint &testerr) {
   bool tst = false;
   loctest++;
   
-  lasd::BST<int> bst;
-  bst.Insert(10);
+  lasd::List<int> lst;
+  lst.InsertAtBack(10);
+
+  lasd::BST<int> bst(lst);
   
-  (bst.Min() == 10) ? tst = true : tst = false, testerr++;
-  std::cout << bst.Min() << std::endl;
-  (bst.Max() == 10) ? tst = true : tst = false, testerr++;
-  std::cout << bst.Max() << std::endl;
-  bst.Exists(10) ? tst = true : tst = false, testerr++;
+  bst.Min() == 10 ? tst = true : testerr++;
+  bst.Max() == 10 ? tst = true : testerr++;
+  bst.Exists(10) ? tst = true : testerr++;
   
   bst.Remove(10);
 
-  bst.Exists(10) ? tst = false, testerr++ : tst = true;
+  bst.Exists(10) ? testerr++ : tst = true;
 
-  if (tst) { std::cout << "#Test " << loctest << ": Single element test passed" << std::endl; }
+  if (testerr == 0) { std::cout << "#Test " << loctest << ": Single element test passed" << std::endl; }
   else { std::cout << "#Test " << loctest << ": Single element test failed" << std::endl; }
 }
 
-// TO TEST
 // Tests the removal of the root
 void TestRootRemoval(uint &loctest, uint &testerr) {
   bool tst = false;
   loctest++;
 
   // Case 1: Root without children
-  lasd::BST<int> bst1;
-  bst1.Insert(10);
+  lasd::List<int> lst;
+  lst.InsertAtBack(10);
+
+  lasd::BST<int> bst1(lst);
   bst1.Remove(10);
-  (bst1.Exists(10) == false) ? tst = true : tst = false, testerr++;
+  (bst1.Exists(10) == false) ? tst = true : testerr++;
 
   // Case 2: Root with one child
-  lasd::BST<int> bst2;
-  bst2.Insert(10);
-  bst2.Insert(5);
+  lasd::List<int> lst2;
+  lst2.InsertAtBack(10);
+  lst2.InsertAtBack(5);
+
+  lasd::BST<int> bst2(lst2);
   bst2.Remove(10);
-  (bst2.Exists(10) == false) ? tst = true : tst = false, testerr++;
-  (bst2.Exists(5) == true) ? tst = true : tst = false, testerr++;
+  (bst2.Exists(10) == false) ? tst = true : testerr++;
+  (bst2.Exists(5) == true) ? tst = true : testerr++;
 
   // Case 3: Root with two children
-  lasd::BST<int> bst3;
-  bst3.Insert(10);
-  bst3.Insert(5);
-  bst3.Insert(15);
-  bst3.Remove(10);
-  (bst3.Exists(10) == false) ? tst = true : tst = false, testerr++;
-  (bst3.Exists(5) == true) ? tst = true : tst = false, testerr++;
-  (bst3.Exists(15) == true) ? tst = true : tst = false, testerr++;
+  lasd::List<int> lst3;
+  lst3.InsertAtBack(10);
+  lst3.InsertAtBack(5);
+  lst3.InsertAtBack(15);
 
-  if (tst) { std::cout << "#Test " << loctest << ": Root removal test passed" << std::endl; }
+  lasd::BST<int> bst3(lst3);
+  bst3.Remove(10);
+  (bst3.Exists(10) == false) ? tst = true : testerr++;
+  (bst3.Exists(5) == true) ? tst = true : testerr++;
+  (bst3.Exists(15) == true) ? tst = true : testerr++;
+
+  if (testerr == 0) { std::cout << "#Test " << loctest << ": Root removal test passed" << std::endl; }
   else { std::cout << "#Test " << loctest << ": Root removal test failed" << std::endl; }
 }
+
+void TestDescendingInsertion(uint &loctest, uint &testerr) {
+  bool tst = true;
+  loctest++;
+    
+  lasd::List<int> lst;
+  const int numElements = 100;
+  for (int i = numElements - 1; i >= 0; --i) {
+    lst.InsertAtBack(i);
+  }
+
+  lasd::BST<int> bst(lst);
+
+  if (bst.Size() != numElements) {
+    tst = false;
+    testerr++;
+  }
+    
+  if (tst) { std::cout << "#Test " << loctest << ": Descending insertion test passed" << std::endl; }
+  else { std::cout << "#Test " << loctest << ": Descending insertion test failed" << std::endl; }
+}
+
+void TestSuccessorPredecessor(uint &loctest, uint &testerr) {
+  bool tst = true;
+  loctest++;
+    
+  lasd::List<int> lst;
+  lst.InsertAtBack(20);
+  lst.InsertAtBack(10);
+  lst.InsertAtBack(30);
+  lst.InsertAtBack(5);
+  lst.InsertAtBack(15);
+  lst.InsertAtBack(25);
+  lst.InsertAtBack(35);
+
+  lasd::BST<int> bst(lst);
+    
+  try {
+    (bst.Successor(10) == 15) ? tst = true : testerr++;
+    (bst.Predecessor(35) == 30) ? tst = true : testerr++;
+    bst.InOrderTraverse(&TraversePrint<int>);
+    std::cout << std::endl;
+  } catch (std::length_error&) { tst = false; }
+    
+  if (tst) { std::cout << "#Test " << loctest << ": Successor and Predecessor test passed" << std::endl; }
+  else { std::cout << "#Test " << loctest << ": Successor and Predecessor test failed" << std::endl; }
+}
+
+void TestLargeInsertion(uint &loctest, uint &testerr) {
+  bool tst = true;
+  loctest++;  
+
+  lasd::List<int> lst;
+  
+  const int numElements = 20000;
+  std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+  for (int i = 0; i < numElements; ++i) {
+    lst.InsertAtBack(i);  
+  }
+
+  try {
+    lasd::BST<int> bst(lst);
+    if (bst.Size() != numElements) {
+      tst = false;
+    }
+  } catch (std::length_error& e) { tst = false; }
+  
+  std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+  std::cout << "BST of " << numElements << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
+    
+  if (tst) { std::cout << "#Test " << loctest << ": Large insertion test passed" << std::endl; }
+  else { std::cout << "#Test " << loctest << ": Large insertion test failed" << std::endl; testerr++; }
+}
+
 
 void Ex2Tests(uint& loctestnum, uint& loctesterr) {
   std::cout << endl << "----------~*~#~*~ Ex2Tests ~*~#~*~----------" << endl;
 
   TestEmptyTree(loctestnum, loctesterr);
+  TestDuplicateInsertion(loctestnum, loctesterr);
   TestSingleElementTree(loctestnum, loctesterr);
   TestRootRemoval(loctestnum, loctesterr);
+  TestDescendingInsertion(loctestnum, loctesterr);
+  TestSuccessorPredecessor(loctestnum, loctesterr);
+  TestLargeInsertion(loctestnum, loctesterr);
 
-  std::cout << "----------End of Ex2Tests!----------" << "Errors/Tests: " << loctesterr << "/" << loctestnum << "" << endl;
+  std::cout << "----------End of Ex2Tests!---------- " << "Errors/Tests: " << "(" << loctesterr << "/" << loctestnum << ") " << endl;
   std::cout << endl;
 }
 

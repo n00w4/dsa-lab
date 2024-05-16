@@ -172,9 +172,10 @@ bool BST<Data>::Insert(const Data& data) {
     NodeLnk*& pointer = FindPointerTo(root, data);
     if (pointer == nullptr) {
         pointer = new NodeLnk(data);
-        this->size++;
+        size++;
         return true;
-    } else { return false; }
+    }
+    return false;
 }
 
 template <typename Data>
@@ -182,9 +183,10 @@ bool BST<Data>::Insert(Data&& data) {
     NodeLnk*& pointer = FindPointerTo(root, data);
     if (pointer == nullptr) {
         pointer = new NodeLnk(std::move(data));
-        this->size++;
+        size++;
         return true;
-    } else { return false; }
+    }
+    return false;
 }
 
 template <typename Data>
