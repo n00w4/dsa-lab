@@ -472,6 +472,7 @@ void TestRootRemoval(uint &loctest, uint &testerr) {
   else { std::cout << "#Test " << loctest << ": Root removal test failed" << std::endl; }
 }
 
+// Tests descending insertion in BST
 void TestDescendingInsertion(uint &loctest, uint &testerr) {
   bool tst = true;
   loctest++;
@@ -493,6 +494,7 @@ void TestDescendingInsertion(uint &loctest, uint &testerr) {
   else { std::cout << "#Test " << loctest << ": Descending insertion test failed" << std::endl; }
 }
 
+// Tests successor and predecessor in BST
 void TestSuccessorPredecessor(uint &loctest, uint &testerr) {
   bool tst = true;
   loctest++;
@@ -519,6 +521,7 @@ void TestSuccessorPredecessor(uint &loctest, uint &testerr) {
   else { std::cout << "#Test " << loctest << ": Successor and Predecessor test failed" << std::endl; }
 }
 
+// Tests large insertion in binary trees
 void TestLargeInsertion(uint &loctest, uint &testerr) {
   bool tst = true;
   loctest++;  
