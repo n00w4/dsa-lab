@@ -346,6 +346,26 @@ void Ex1Tests(uint &loctestnum, uint &loctesterr) {
 
 // EXERCISE 2 TESTS
 
+// Tests an iterator with a large number of random integers
+void TestLargeIterator(uint &loctest, uint &testerr) {
+  bool tst = false;
+  loctest++;
+  lasd::List<int> lst;
+  RandomIntNSizeList(lst);
+
+  lasd::BinaryTreeVec<int> btv(lst);
+  lasd::BTInOrderIterator<int> it(btv);
+  
+  try {
+    for (ulong i = 0; i <= lst.Size(); i++) {
+      ++it;
+    }
+  } catch (const std::out_of_range& e) { tst = true; }
+
+  if (tst) { std::cout << "#Test " << loctest << ": Large iterator test passed" << std::endl; }
+  else { std::cout << "#Test " << loctest << ": Large iterator test failed" << std::endl; }
+}
+
 // Tests an empty tree
 void TestEmptyTree(uint &loctest, uint &testerr) {
   bool tst = false;
@@ -362,16 +382,17 @@ void TestEmptyTree(uint &loctest, uint &testerr) {
     bst.Max();
     testerr++; // should not be executed
   } catch (const std::length_error& e) { tst = true; }
-  
-  // test 3
-  bst.Remove(10) ? tst = false, testerr++ : tst = true;
+  try {
+    // test 3
+    bst.Remove(10) ? tst = false, testerr++ : tst = true;
+  } catch (const std::length_error& e) { tst = true; }
   
   if (tst) { std::cout << "#Test " << loctest << ": Empty tree test passed" << std::endl; }
   else { std::cout << "#Test " << loctest << ": Empty tree test failed" << std::endl; }
 }
 
 // Tests duplicates in a binary tree
- void TestDuplicateInsertion(uint &loctest, uint &testerr) {
+void TestDuplicateInsertion(uint &loctest, uint &testerr) {
   bool tst = false;
   loctest++;
 
@@ -389,7 +410,6 @@ void TestEmptyTree(uint &loctest, uint &testerr) {
   if (testerr == 0) { std::cout << "#Test " << loctest << ": Duplicate insertion test passed" << std::endl; }
   else { std::cout << "#Test " << loctest << ": Duplicate insertion test failed" << std::endl; }
 }
-
 
 // Tests a tree with 1 node
 void TestSingleElementTree(uint &loctest, uint &testerr) {
@@ -506,29 +526,48 @@ void TestLargeInsertion(uint &loctest, uint &testerr) {
   lasd::List<int> lst;
   
   const int numElements = 20000;
-  std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   for (int i = 0; i < numElements; ++i) {
     lst.InsertAtBack(i);  
   }
 
   try {
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    lasd::BinaryTreeLnk<int> bt(lst);
+    if (bt.Size() != numElements) {
+      tst = false;
+    }
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    std::cout << "BinaryTreeLnk of " << numElements << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
+  } catch (std::length_error& e) { tst = false; }
+
+  try {
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    lasd::BinaryTreeVec<int> btvec(lst);
+    if (btvec.Size() != numElements) {
+      tst = false;
+    }
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    std::cout << "BinaryTreeVec of " << numElements << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
+  } catch (std::length_error& e) { tst = false; }
+
+  try {
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     lasd::BST<int> bst(lst);
     if (bst.Size() != numElements) {
       tst = false;
     }
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    std::cout << "BST of " << numElements << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
   } catch (std::length_error& e) { tst = false; }
   
-  std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-  std::cout << "BST of " << numElements << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
-    
   if (tst) { std::cout << "#Test " << loctest << ": Large insertion test passed" << std::endl; }
   else { std::cout << "#Test " << loctest << ": Large insertion test failed" << std::endl; testerr++; }
 }
 
-
 void Ex2Tests(uint& loctestnum, uint& loctesterr) {
   std::cout << endl << "----------~*~#~*~ Ex2Tests ~*~#~*~----------" << endl;
 
+  TestLargeIterator(loctestnum, loctesterr);
   TestEmptyTree(loctestnum, loctesterr);
   TestDuplicateInsertion(loctestnum, loctesterr);
   TestSingleElementTree(loctestnum, loctesterr);
