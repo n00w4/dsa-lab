@@ -37,7 +37,7 @@ BST<Data>& BST<Data>::operator=(BST<Data>&& bst) noexcept {
 
 // Comparison operators
 template <typename Data>
-bool BST<Data>::operator==(const BST &bt) const noexcept {
+bool BST<Data>::operator==(const BST<Data>& bt) const noexcept {
     if (size == bt.size) {
         if (size == 0) { return true; }
         BTInOrderIterator<Data> iterThis(*this);
@@ -53,7 +53,7 @@ bool BST<Data>::operator==(const BST &bt) const noexcept {
 }
 
 template <typename Data>
-bool BST<Data>::operator!=(const BST &bt) const noexcept {
+bool BST<Data>::operator!=(const BST<Data>& bt) const noexcept {
     return !(*this == bt);
 }
 
@@ -157,7 +157,7 @@ Data BST<Data>::SuccessorNRemove(const Data& data) {
 
 template <typename Data>
 void BST<Data>::RemoveSuccessor(const Data& data) {
-    const typename BST<Data>::NodeLnk** pointer = FindPointerToSuccessor(root, data);
+    typename BST<Data>::NodeLnk** pointer = const_cast<typename BST<Data>::NodeLnk**>(FindPointerToSuccessor(root, data));
     if (pointer == nullptr) {
         throw std::length_error("Successor not found");
     }
@@ -217,16 +217,16 @@ Data BST<Data>::DataNDelete(NodeLnk *node) {
 }
 
 template <typename Data>
-typename BST<Data>::NodeLnk* BST<Data>::Detach(NodeLnk*& node) noexcept {
+typename BST<Data>::NodeLnk* BST<Data>::Detach(typename BST<Data>::NodeLnk*& node) noexcept {
     if (node != nullptr) {
-        if (node->left == nullptr) { return Skip2Right(node); }
-        else if (node->right == nullptr) { return Skip2Left(node); }
+        if (node->left == nullptr) { return Skip2Right(const_cast<typename BST<Data>::NodeLnk*&>(node)); }
+        else if (node->right == nullptr) { return Skip2Left(const_cast<typename BST<Data>::NodeLnk*&>(node)); }
         else {
           // Doesn't matter when the node has right and left children
           // BST<Data>::NodeLnk* detach = DetachMin(node->right);
             BST<Data>::NodeLnk* detach = DetachMax(node->left);
             std::swap(node->element, detach->element);
-            return detach; 
+            return detach;
         }
     }
     return nullptr;
