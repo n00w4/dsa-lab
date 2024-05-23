@@ -35,6 +35,11 @@
 // BST
 #include "../bst/bst.hpp"
 
+// HashTable
+#include "../hashtable/hashtable.hpp"
+#include "../hashtable/clsadr/htclsadr.hpp"
+#include "../hashtable/opnadr/htopnadr.hpp"
+
 // Useful functions from zlasdtest
 #include "../zlasdtest/container/mappable.hpp"
 #include "../zlasdtest/container/dictionary.hpp"
@@ -345,7 +350,7 @@ void Ex1Tests(uint &loctestnum, uint &loctesterr) {
   std::cout << endl;
 }
 
-  /* ************************************************************************** */
+/* ************************************************************************** */
 
 namespace ex2 {
 
@@ -589,7 +594,124 @@ void Ex2Tests(uint& loctestnum, uint& loctesterr) {
   std::cout << endl;
 }
 
-  /* ************************************************************************** */
+/* ************************************************************************** */
+
+namespace ex3 {
+
+  // EXERCISE 3 TESTS
+
+  // Tests creation of an empty table and a table with 1 element
+  void TestCreationTable(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::Vector<int> vec;
+      lasd::HashTableClsAdr<int> ht(vec);
+      vec.Resize(1);
+      vec[0] = 1;
+      lasd::HashTableClsAdr<int> ht2(vec);
+      if (ht2.Exists(1)) { tst = true; }
+    } catch (std::exception& e) { tst = false; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Insertion into an empty table test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Insertion into an empty table test failed" << std::endl; testerr++; }
+  }
+
+  // Tests how the table handles collisions
+  void TestCollisions(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::Vector<int> vec(2);
+      vec[0] = 1;
+      vec[1] = 11;
+      lasd::HashTableClsAdr<int> ht(vec);
+      if (ht.Exists(11) && ht.Exists(1)) { tst = true; }
+    } catch (std::exception& e) { tst = false; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Collision handling test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Collision handling test failed" << std::endl; testerr++; }
+  }
+
+  // Tests the removal of an element that is in the middle of a chain
+  void TestRemoval(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::Vector<int> vec(4);
+      vec[0] = 1;
+      vec[1] = 11;
+      vec[2] = 111;
+      vec[3] = 1111;
+      lasd::HashTableClsAdr<int> ht(vec);
+      ht.Remove(11);
+      if (!ht.Exists(11) && ht.Exists(1111) && ht.Exists(111) && ht.Exists(1)) { tst = true; }
+    } catch (std::exception& e) { tst = false; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Removal test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Removal test failed" << std::endl; testerr++; }
+  }
+
+  // Tests how the table handles great amount of elements
+  void TestLargeTable(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::List<int> list;
+      for (uint i = 0; i < 100000; i++) {
+        list.InsertAtBack(i);
+      }
+      std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+      lasd::HashTableClsAdr<int> ht(list);
+      std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+      std::cout << "Table of " << list.Size() << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << std::endl;
+      if (ht.Size() == list.Size()) { tst = true; }
+    } catch (std::exception& e) { tst = false; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Large table test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Large table test failed" << std::endl; testerr++; }
+  }
+
+  void TestRehashing(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::List<int> list;
+      for (uint i = 0; i < 10; i++) { list.InsertAtBack(i); }
+      lasd::HashTableClsAdr<int> ht(list);
+      for (uint i = 10; i < 30; i++) { list.InsertAtBack(i); }
+      ht.InsertAll(list);
+      for (uint i = 0; i < 30; i++) {
+        if (ht.Exists(i)) { tst = true; }
+        else { tst = false; break; }
+      }
+    } catch (std::exception& e) { tst = false; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Rehashing test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Rehashing test failed" << std::endl; testerr++; }
+  }
+
+}
+
+void Ex3Tests(uint &loctestnum, uint &loctesterr) {
+  std::cout << endl << "----------~*~#~*~ Ex3Tests ~*~#~*~----------" << endl;
+
+  ex3::TestCreationTable(loctestnum, loctesterr);
+  ex3::TestCollisions(loctestnum, loctesterr);
+  ex3::TestRemoval(loctestnum, loctesterr);
+  ex3::TestLargeTable(loctestnum, loctesterr);
+  ex3::TestRehashing(loctestnum, loctesterr);
+  
+  std::cout << "----------End of Ex3Tests!---------- " << "Errors/Tests: " << "(" << loctesterr << "/" << loctestnum << ") " << endl;
+  std::cout << endl;
+}
+
+/* ************************************************************************** */
 
 void mytest() {
   std::cout << endl << "~*~#~*~ mytestSuite ~*~#~*~ " << endl;
@@ -597,6 +719,7 @@ void mytest() {
 
   Ex1Tests(loctestnum, loctesterr);
   Ex2Tests(loctestnum, loctesterr);
+  Ex3Tests(loctestnum, loctesterr);
 
   std::cout << "----------End of Tests!----------" << endl;
 }
