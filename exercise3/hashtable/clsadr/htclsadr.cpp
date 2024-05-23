@@ -80,7 +80,7 @@ bool HashTableClsAdr<Data>::operator==(const HashTableClsAdr<Data>& ht) const no
     bool isEqual = true;
     if (size != ht.size) { return false; }
     for (unsigned long i = 0; i < tablesize; i++) {
-        table[i].Traverse([&ht](const Data& data) {
+        table[i].Traverse([&ht, &isEqual](const Data& data) {
             if (!ht.Exists(data)) { isEqual = false; return; }
         });
         if (!isEqual) { return false; }
