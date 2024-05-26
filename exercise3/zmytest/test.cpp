@@ -600,6 +600,29 @@ namespace ex3 {
 
   // EXERCISE 3 TESTS
 
+  void TestConstructors(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::Vector<int> vec;
+      lasd::List<int> lst;
+      lasd::HashTableClsAdr<int> ht(vec);
+      lasd::HashTableOpnAdr<int> htop(vec);
+      lasd::HashTableClsAdr<int> ht2(lst);
+      lasd::HashTableOpnAdr<int> htop2(lst);
+
+      lasd::HashTableClsAdr<int> ht3(ht);
+      lasd::HashTableOpnAdr<int> htop3(htop);
+      lasd::HashTableClsAdr<int> ht4(std::move(ht3));
+      lasd::HashTableOpnAdr<int> htop4(std::move(htop3));
+      tst = true;
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Constructors test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Constructors test failed" << std::endl; testerr++; }
+  }
+
   // Tests creation of an empty table and a table with 1 element
   void TestCreationTable(uint &loctest, uint &testerr) {
     bool tst = false;
@@ -608,11 +631,14 @@ namespace ex3 {
     try {
       lasd::Vector<int> vec;
       lasd::HashTableClsAdr<int> ht(vec);
+      lasd::HashTableOpnAdr<int> htop(vec);
       vec.Resize(1);
       vec[0] = 1;
       lasd::HashTableClsAdr<int> ht2(vec);
+      lasd::HashTableOpnAdr<int> htop2(vec);
       if (ht2.Exists(1)) { tst = true; }
-    } catch (std::exception& e) { tst = false; }
+      if (htop2.Exists(1)) { tst = true; } else { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
 
     if (tst) { std::cout << "#Test " << loctest << ": Insertion into an empty table test passed" << std::endl; }
     else { std::cout << "#Test " << loctest << ": Insertion into an empty table test failed" << std::endl; testerr++; }
@@ -628,8 +654,10 @@ namespace ex3 {
       vec[0] = 1;
       vec[1] = 11;
       lasd::HashTableClsAdr<int> ht(vec);
+      lasd::HashTableOpnAdr<int> htop(vec);
       if (ht.Exists(11) && ht.Exists(1)) { tst = true; }
-    } catch (std::exception& e) { tst = false; }
+      if (htop.Exists(11) && htop.Exists(1)) { tst = true; } else { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
 
     if (tst) { std::cout << "#Test " << loctest << ": Collision handling test passed" << std::endl; }
     else { std::cout << "#Test " << loctest << ": Collision handling test failed" << std::endl; testerr++; }
@@ -647,9 +675,12 @@ namespace ex3 {
       vec[2] = 111;
       vec[3] = 1111;
       lasd::HashTableClsAdr<int> ht(vec);
+      lasd::HashTableOpnAdr<int> htop(vec);
       ht.Remove(11);
+      htop.Remove(11);
       if (!ht.Exists(11) && ht.Exists(1111) && ht.Exists(111) && ht.Exists(1)) { tst = true; }
-    } catch (std::exception& e) { tst = false; }
+      if (!htop.Exists(11) && htop.Exists(1111) && htop.Exists(111) && htop.Exists(1)) { tst = true; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
 
     if (tst) { std::cout << "#Test " << loctest << ": Removal test passed" << std::endl; }
     else { std::cout << "#Test " << loctest << ": Removal test failed" << std::endl; testerr++; }
@@ -668,15 +699,28 @@ namespace ex3 {
       std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
       lasd::HashTableClsAdr<int> ht(list);
       std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-      std::cout << "Table of " << list.Size() << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << std::endl;
+      std::cout << "HashTable ClsAdr of " << list.Size() << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << std::endl;
       if (ht.Size() == list.Size()) { tst = true; }
-    } catch (std::exception& e) { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::List<int> list;
+      for (uint i = 0; i < 100000; i++) {
+        list.InsertAtBack(i);
+      }
+      std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+      lasd::HashTableOpnAdr<int> ht(list);
+      std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+      std::cout << "HashTable OpnAdr of " << list.Size() << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << std::endl;
+      if (ht.Size() == list.Size()) { tst = true; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
 
     if (tst) { std::cout << "#Test " << loctest << ": Large table test passed" << std::endl; }
     else { std::cout << "#Test " << loctest << ": Large table test failed" << std::endl; testerr++; }
   }
 
-  void TestRehashing(uint &loctest, uint &testerr) {
+  // Tests rehashing and resizing
+  void TestRehashingNResizing(uint &loctest, uint &testerr) {
     bool tst = false;
     loctest++;
 
@@ -692,8 +736,76 @@ namespace ex3 {
       }
     } catch (std::exception& e) { tst = false; }
 
+    try {
+      lasd::List<int> list;
+      for (uint i = 0; i < 10; i++) { list.InsertAtBack(i); }
+      lasd::HashTableOpnAdr<int> htop(list);
+      for (uint i = 10; i < 30; i++) { list.InsertAtBack(i); }
+      htop.InsertAll(list);
+      for (uint i = 0; i < 30; i++) {
+        if (htop.Exists(i)) { tst = true; }
+        else { tst = false; break; }
+      }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
     if (tst) { std::cout << "#Test " << loctest << ": Rehashing test passed" << std::endl; }
     else { std::cout << "#Test " << loctest << ": Rehashing test failed" << std::endl; testerr++; }
+  }
+
+  // Tests a particular case where the user tries to resize to 0 (or a number less than the default size)
+  void TestResizingZero(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::HashTableOpnAdr<int> ht;
+      ht.Resize(0); // should create a memory leak
+      tst = true;
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Resizing test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Resizing test failed" << std::endl; testerr++; }
+
+  }
+
+  // Tests probing
+  void TestProbing(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::List<int> list;
+      for (uint i = 0; i < 10; i++) { list.InsertAtBack(i); }
+      lasd::HashTableOpnAdr<int> ht(list);
+      lasd::List<int> list2;
+      for (uint i = 0; i < 10; i++) { list2.InsertAtBack(i); }
+      if (!ht.InsertAll(list2)) { tst = true; } // shouldn't be inserted
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Probing test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Probing test failed" << std::endl; testerr++; }
+  }
+  
+  // Tests remove function
+  void TestRemove(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::List<int> list;
+      lasd::List<int> list2;
+      for (uint i = 0; i < 10; i++) { list.InsertAtBack(i); }
+      list2.InsertAtBack(0);
+      lasd::HashTableOpnAdr<int> ht(10);
+      ht.InsertAll(list);
+      if (!ht.Remove(100)) { tst = true; }
+      ht.Remove(0);
+      if (!ht.InsertAll(list2)) { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Remove test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Remove test failed" << std::endl; testerr++; }
+
   }
 
 }
@@ -701,11 +813,15 @@ namespace ex3 {
 void Ex3Tests(uint &loctestnum, uint &loctesterr) {
   std::cout << endl << "----------~*~#~*~ Ex3Tests ~*~#~*~----------" << endl;
 
+  ex3::TestConstructors(loctestnum, loctesterr);
   ex3::TestCreationTable(loctestnum, loctesterr);
   ex3::TestCollisions(loctestnum, loctesterr);
   ex3::TestRemoval(loctestnum, loctesterr);
   ex3::TestLargeTable(loctestnum, loctesterr);
-  ex3::TestRehashing(loctestnum, loctesterr);
+  ex3::TestRehashingNResizing(loctestnum, loctesterr);
+  ex3::TestResizingZero(loctestnum, loctesterr);
+  ex3::TestProbing(loctestnum, loctesterr);
+  ex3::TestRemove(loctestnum, loctesterr);
   
   std::cout << "----------End of Ex3Tests!---------- " << "Errors/Tests: " << "(" << loctesterr << "/" << loctestnum << ") " << endl;
   std::cout << endl;

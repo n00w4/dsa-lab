@@ -155,7 +155,7 @@ bool HashTableOpnAdr<Data>::Exists(const Data& data) const noexcept {
 // Specific member functions inherited from ResizableContainer
 template <typename Data>
 void HashTableOpnAdr<Data>::Resize(const unsigned long newsize) {
-    unsigned long tempTableSize = (newsize == 16) ? 16 : std::pow(2, std::ceil(log2(newsize)));
+    unsigned long tempTableSize = (newsize <= 16) ? 16 : std::pow(2, std::ceil(log2(newsize)));
 
     Data* tempTable = new Data[tempTableSize] {};
     Flag* tempTableFlag = new Flag[tempTableSize] {};
