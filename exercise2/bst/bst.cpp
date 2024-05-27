@@ -37,23 +37,20 @@ BST<Data>& BST<Data>::operator=(BST<Data>&& bst) noexcept {
 
 // Comparison operators
 template <typename Data>
-bool BST<Data>::operator==(const BST<Data>& bt) const noexcept {
+bool BST<Data>::operator==(const BST &bt) const noexcept {
     if (size == bt.size) {
-        if (size == 0) { return true; }
         BTInOrderIterator<Data> iterThis(*this);
         BTInOrderIterator<Data> iterOther(bt);
-        while (!iterThis.Terminated() && !iterOther.Terminated()) {
-            if (*iterThis != *iterOther) { return false; }
-            ++iterThis;
-            ++iterOther;
+        for (; !iterThis.Terminated(); ++iterThis, ++iterOther) {
+            if((*iterThis) != (*iterOther)) {  return false; }
         }
-        if (iterThis.Terminated() && iterOther.Terminated()) { return true; }
+        return true;
     }
     return false;
 }
 
 template <typename Data>
-bool BST<Data>::operator!=(const BST<Data>& bt) const noexcept {
+bool BST<Data>::operator!=(const BST &bt) const noexcept {
     return !(*this == bt);
 }
 
@@ -157,7 +154,7 @@ Data BST<Data>::SuccessorNRemove(const Data& data) {
 
 template <typename Data>
 void BST<Data>::RemoveSuccessor(const Data& data) {
-    typename BST<Data>::NodeLnk** pointer = const_cast<typename BST<Data>::NodeLnk**>(FindPointerToSuccessor(root, data));
+    const typename BST<Data>::NodeLnk** pointer = FindPointerToSuccessor(root, data);
     if (pointer == nullptr) {
         throw std::length_error("Successor not found");
     }
@@ -217,16 +214,16 @@ Data BST<Data>::DataNDelete(NodeLnk *node) {
 }
 
 template <typename Data>
-typename BST<Data>::NodeLnk* BST<Data>::Detach(typename BST<Data>::NodeLnk*& node) noexcept {
+typename BST<Data>::NodeLnk* BST<Data>::Detach(NodeLnk*& node) noexcept {
     if (node != nullptr) {
-        if (node->left == nullptr) { return Skip2Right(const_cast<typename BST<Data>::NodeLnk*&>(node)); }
-        else if (node->right == nullptr) { return Skip2Left(const_cast<typename BST<Data>::NodeLnk*&>(node)); }
+        if (node->left == nullptr) { return Skip2Right(node); }
+        else if (node->right == nullptr) { return Skip2Left(node); }
         else {
           // Doesn't matter when the node has right and left children
           // BST<Data>::NodeLnk* detach = DetachMin(node->right);
             BST<Data>::NodeLnk* detach = DetachMax(node->left);
             std::swap(node->element, detach->element);
-            return detach;
+            return detach; 
         }
     }
     return nullptr;
@@ -332,19 +329,17 @@ template <typename Data>
 const typename BST<Data>::NodeLnk* const* BST<Data>::FindPointerToPredecessor(const NodeLnk* const& node, const Data& data) const noexcept {
     const NodeLnk* const* nodeptr = &node;
     const NodeLnk* const* nodeprd = nullptr;
-    while(true) {
-        const NodeLnk& current = **nodeptr;
-        if (current.element < data) {
+    while((*nodeptr) != nullptr && (*nodeptr)->element != data) {
+        if ((*nodeptr)->element > data) { nodeptr = &(*nodeptr)->left; }
+        else if ((*nodeptr)->element < data) {
             nodeprd = nodeptr;
-            if (current.right == nullptr) { return nodeprd; }
-            else { nodeptr = &current.right; }
-        } else {
-            if (current.left == nullptr) { return nodeprd; }
-            else {
-                if (current.element > data) { return &FindPointerToMax(current.left); }
-            }
+            nodeptr = &(*nodeptr)->right;
         }
     }
+    if ((*nodeptr) != nullptr && (*nodeptr)->left != nullptr) {
+        nodeprd = &FindPointerToMax((*nodeptr)->left);
+    }
+    return nodeprd;
 }
 
 template <typename Data>
@@ -355,21 +350,18 @@ typename BST<Data>::NodeLnk** BST<Data>::FindPointerToSuccessor(NodeLnk*& node, 
 template <typename Data>
 const typename BST<Data>::NodeLnk* const* BST<Data>::FindPointerToSuccessor(const NodeLnk* const& node, const Data& data) const noexcept {
     const NodeLnk* const* nodeptr = &node;
-    const NodeLnk* const* nodeprd = nullptr;
-    while(true) {
-        const NodeLnk& current = **nodeptr;
-        if (current.element > data) {
-            nodeprd = nodeptr;
-            if (current.left == nullptr) { return nodeprd; }
-            else { nodeptr = &current.left; }
-        } else {
-            if (current.right == nullptr) { return nodeprd; }
-            else {
-                if (current.element < data) { nodeptr = &current.right; }
-                else { return &FindPointerToMin(current.right); }
-            }
+    const NodeLnk* const* nodesuc = nullptr;
+    while((*nodeptr) != nullptr && (*nodeptr)->element != data) {
+        if ((*nodeptr)->element < data) { nodeptr = &(*nodeptr)->right; }
+        else if ((*nodeptr)->element > data) {
+            nodesuc = nodeptr;
+            nodeptr = &(*nodeptr)->left;
         }
     }
+    if ((*nodeptr) != nullptr && (*nodeptr)->right != nullptr) {
+        nodesuc = &FindPointerToMin((*nodeptr)->right);
+    }
+    return nodesuc;
 }
 
 /* ************************************************************************** */
