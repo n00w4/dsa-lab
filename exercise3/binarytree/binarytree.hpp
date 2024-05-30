@@ -402,7 +402,7 @@ public:
   BTPreOrderMutableIterator(const BTPreOrderMutableIterator& iter) : BTPreOrderIterator<Data>(iter) {};
 
   // Move constructor
-  BTPreOrderMutableIterator(BTPreOrderMutableIterator&& iter) noexcept : BTPreOrderIterator<Data>(iter) {};
+  BTPreOrderMutableIterator(BTPreOrderMutableIterator&& iter) noexcept : BTPreOrderIterator<Data>(std::move(iter)) {};
 
   /* ************************************************************************ */
 
@@ -414,11 +414,13 @@ public:
   // Copy assignment
   BTPreOrderMutableIterator& operator=(const BTPreOrderMutableIterator& iter) {
     BTPreOrderIterator<Data>::operator=(iter);
+    return *this;
   };
 
   // Move assignment
   BTPreOrderMutableIterator& operator=(BTPreOrderMutableIterator&& iter) noexcept {
     BTPreOrderIterator<Data>::operator=(std::move(iter));
+    return *this;
   };
 
   /* ************************************************************************ */
@@ -435,10 +437,11 @@ public:
 
   // Specific member functions (inherited from MutableIterator)
 
+  using BTPreOrderIterator<Data>::operator*;
+
   // operator*() specifiers; // (throw std::out_of_range when terminated)
   Data& operator*() override {
-    if (!stack.Empty()) { return stack.Top()->Element(); }
-    else { throw std::out_of_range("Iterator terminated"); }
+    return const_cast<Data&>(const_cast<const BTPreOrderMutableIterator*>(this)->operator*());
   };
 
 };
@@ -600,7 +603,7 @@ public:
   BTPostOrderMutableIterator(const BTPostOrderMutableIterator& iter) : BTPostOrderIterator<Data>(iter) {};
 
   // Move constructor
-  BTPostOrderMutableIterator(BTPostOrderMutableIterator&& iter) noexcept : BTPostOrderIterator<Data>(iter) {};
+  BTPostOrderMutableIterator(BTPostOrderMutableIterator&& iter) noexcept : BTPostOrderIterator<Data>(std::move(iter)) {};
 
   /* ************************************************************************ */
 
@@ -612,11 +615,13 @@ public:
   // Copy assignment
   BTPostOrderMutableIterator& operator=(const BTPostOrderMutableIterator& iter) {
     BTPostOrderIterator<Data>::operator=(iter);
+    return *this;
   };
 
   // Move assignment
   BTPostOrderMutableIterator& operator=(BTPostOrderMutableIterator&& iter) noexcept {
     BTPostOrderIterator<Data>::operator=(std::move(iter));
+    return *this;
   };
 
   /* ************************************************************************ */
@@ -633,10 +638,11 @@ public:
 
   // Specific member functions (inherited from MutableIterator)
 
+  using BTPostOrderIterator<Data>::operator*;
+
   // operator*() specifiers; // (throw std::out_of_range when terminated)
   Data& operator*() override {
-    if (!stack.Empty()) { return stack.Top()->Element(); }
-    else { throw std::out_of_range("Iterator terminated"); }
+    return const_cast<Data&>(const_cast<const BTPostOrderMutableIterator*>(this)->operator*());
   };
 
 };
@@ -790,7 +796,7 @@ public:
   BTInOrderMutableIterator(const BTInOrderMutableIterator& iter) : BTInOrderIterator<Data>(iter) {};
 
   // Move constructor
-  BTInOrderMutableIterator(BTInOrderMutableIterator&& iter) noexcept : BTInOrderIterator<Data>(iter) {};
+  BTInOrderMutableIterator(BTInOrderMutableIterator&& iter) noexcept : BTInOrderIterator<Data>(std::move(iter)) {};
 
   /* ************************************************************************ */
 
@@ -802,11 +808,13 @@ public:
   // Copy assignment
   BTInOrderMutableIterator& operator=(const BTInOrderMutableIterator& iter) {
     BTInOrderIterator<Data>::operator=(iter);
+    return *this;
   };
 
   // Move assignment
   BTInOrderMutableIterator& operator=(BTInOrderMutableIterator&& iter) noexcept {
     BTInOrderIterator<Data>::operator=(std::move(iter));
+    return *this;
   };
 
   /* ************************************************************************ */
@@ -823,10 +831,11 @@ public:
 
   // Specific member functions (inherited from MutableIterator)
 
+  using BTInOrderIterator<Data>::operator*;
+
   // operator*() specifiers; // (throw std::out_of_range when terminated)
   Data& operator*() {
-    if (!stack.Empty()) { return stack.Top()->Element(); }
-    else { throw std::out_of_range("Iterator terminated"); }
+    return const_cast<Data&>(const_cast<const BTInOrderMutableIterator*>(this)->operator*());
   };
 
 };
@@ -960,7 +969,7 @@ public:
   BTBreadthMutableIterator(const BTBreadthMutableIterator<Data>& iter) : BTBreadthIterator<Data>(iter) {};
 
   // Move constructor
-  BTBreadthMutableIterator(BTBreadthMutableIterator<Data>&& iter) noexcept : BTBreadthIterator<Data>(iter) {};
+  BTBreadthMutableIterator(BTBreadthMutableIterator<Data>&& iter) noexcept : BTBreadthIterator<Data>(std::move(iter)) {};
 
   /* ************************************************************************ */
 
@@ -972,11 +981,13 @@ public:
   // Copy assignment
   BTBreadthMutableIterator<Data>& operator=(const BTBreadthMutableIterator<Data>& iter) {
     BTBreadthIterator<Data>::operator=(iter);
+    return *this;
   };
 
   // Move assignment
   BTBreadthMutableIterator<Data>& operator=(BTBreadthMutableIterator<Data>&& iter) noexcept {
     BTBreadthIterator<Data>::operator=(std::move(iter));
+    return *this;
   };
 
   /* ************************************************************************ */
@@ -993,10 +1004,11 @@ public:
 
   // Specific member functions (inherited from MutableIterator)
 
+  using BTBreadthIterator<Data>::operator*;
+
   // operator*() specifiers; // (throw std::out_of_range when terminated)
   Data& operator*() override {
-    if (!queue.Empty()) { return const_cast<Data&>(queue.Head()->Element()); }
-    else { throw std::out_of_range("Iterator terminated"); }
+    return const_cast<Data&>(const_cast<const BTBreadthMutableIterator*>(this)->operator*());
   };
 
 };

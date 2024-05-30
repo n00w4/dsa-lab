@@ -95,7 +95,7 @@ BinaryTreeVec<Data>::BinaryTreeVec(MappableContainer<Data>&& mc) {
     
     mc.Map(
         [this, &index](Data& data) {
-            NodeVec* node = new NodeVec(std::move(data), index, treevector);
+            NodeVec* node = new NodeVec(data, index, treevector);
             treevector->operator[](index++) = std::move(node);
         });
 }

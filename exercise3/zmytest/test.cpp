@@ -356,6 +356,127 @@ namespace ex2 {
 
   // EXERCISE 2 TESTS
 
+  void TestConstructors(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::List<int> lst;
+      for (int i = 0; i < 10; i++) { lst.InsertAtBack(i); }
+      lasd::BinaryTreeVec<int> btv(lst);
+      lasd::BinaryTreeLnk<int> btl(lst);
+      lasd::BST<int> bst(lst);
+      lasd::BTBreadthIterator<int> it(btl);
+      lasd::BTInOrderIterator<int> it2(btl);
+      lasd::BTPostOrderIterator<int> it3(btl);
+      lasd::BTPreOrderIterator<int> it4(btl);
+      lasd::BTBreadthMutableIterator<int> it5(btl);
+      lasd::BTPostOrderMutableIterator<int> it6(btl);
+      lasd::BTPreOrderMutableIterator<int> it7(btl);
+      lasd::BTInOrderMutableIterator<int> it8(btl);
+      
+      tst = true;
+    } catch (const std::bad_alloc& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::List<int> lst;
+      lasd::BinaryTreeVec<int> btv(std::move(lst));
+      lasd::BinaryTreeLnk<int> btl(std::move(lst));
+      lasd::BST<int> bst(std::move(lst));
+      lasd::BTBreadthIterator<int> it(std::move(btl));
+      lasd::BTInOrderIterator<int> it2(std::move(btl));
+      lasd::BTPostOrderIterator<int> it3(std::move(btl));
+      lasd::BTPreOrderIterator<int> it4(std::move(btl));
+      
+      tst = true;
+    } catch (const std::bad_alloc& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Constructor test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Constructor test failed" << std::endl; }
+  }
+
+  void TestAssignment(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::BinaryTreeLnk<int> btl1;
+      lasd::BinaryTreeLnk<int> btl2;
+      btl1 = btl2;
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BinaryTreeVec<int> btv1;
+      lasd::BinaryTreeVec<int> btv2;
+      btv1 = btv2;
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BST<int> bst1;
+      lasd::BST<int> bst2;
+      bst1 = bst2;
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BinaryTreeLnk<int> btl1;
+      lasd::BinaryTreeLnk<int> btl2;
+      btl1 = std::move(btl2);
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BinaryTreeVec<int> btv1;
+      lasd::BinaryTreeVec<int> btv2;
+      btv1 = std::move(btv2);
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BST<int> bst1;
+      lasd::BST<int> bst2;
+      bst1 = std::move(bst2);
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Assignment test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Assignment test failed" << std::endl; }
+  }
+
+  void TestComparison(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::List<int> lst1;
+      for (int i = 0; i < 10; i++) { lst1.InsertAtBack(i); }
+      lasd::BinaryTreeLnk<int> btl1(lst1);
+      lasd::BinaryTreeLnk<int> btl2(lst1);
+      tst = (btl1 == btl2);
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::List<int> lst1;
+      for (int i = 0; i < 10; i++) { lst1.InsertAtBack(i); }
+      lasd::BinaryTreeVec<int> btv(lst1);
+      lasd::BinaryTreeVec<int> btv2(lst1);
+      tst = (btv == btv2);
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::List<int> lst1;
+      for (int i = 0; i < 10; i++) { lst1.InsertAtBack(i); }
+      lasd::BST<int> bst1(lst1);
+      lasd::BST<int> bst2(lst1);
+      tst = (bst1 == bst2);
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Comparison test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Comparison test failed" << std::endl; }
+  }
+
   // Tests an iterator with a large number of random integers
   void TestLargeIterator(uint &loctest, uint &testerr) {
     bool tst = false;
@@ -386,16 +507,16 @@ namespace ex2 {
       // test 1
       bst.Min();
       testerr++; // should not be executed
-    } catch (const std::length_error& e) { tst = true; }
+    } catch (const std::exception& e) { tst = true; }
     try {
       // test 2
       bst.Max();
       testerr++; // should not be executed
-    } catch (const std::length_error& e) { tst = true; }
+    } catch (const std::exception& e) { tst = true; }
     try {
       // test 3
       bst.Remove(10) ? tst = false, testerr++ : tst = true;
-    } catch (const std::length_error& e) { tst = true; }
+    } catch (const std::exception& e) { tst = true; }
 
     if (tst) { std::cout << "#Test " << loctest << ": Empty tree test passed" << std::endl; }
     else { std::cout << "#Test " << loctest << ": Empty tree test failed" << std::endl; }
@@ -525,7 +646,7 @@ namespace ex2 {
       (bst.Predecessor(35) == 30) ? tst = true : testerr++;
       bst.InOrderTraverse(&TraversePrint<int>);
       std::cout << std::endl;
-    } catch (std::length_error&) { tst = false; }
+    } catch (std::exception&) { tst = false; }
 
     if (tst) { std::cout << "#Test " << loctest << ": Successor and Predecessor test passed" << std::endl; }
     else { std::cout << "#Test " << loctest << ": Successor and Predecessor test failed" << std::endl; }
@@ -551,7 +672,7 @@ namespace ex2 {
       }
       std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
       std::cout << "BinaryTreeLnk of " << numElements << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
-    } catch (std::length_error& e) { tst = false; }
+    } catch (std::exception& e) { tst = false; }
 
     try {
       std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
@@ -561,7 +682,7 @@ namespace ex2 {
       }
       std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
       std::cout << "BinaryTreeVec of " << numElements << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
-    } catch (std::length_error& e) { tst = false; }
+    } catch (std::exception& e) { tst = false; }
 
     try {
       std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
@@ -571,7 +692,7 @@ namespace ex2 {
       }
       std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
       std::cout << "BST of " << numElements << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
-    } catch (std::length_error& e) { tst = false; }
+    } catch (std::exception& e) { tst = false; }
 
     if (tst) { std::cout << "#Test " << loctest << ": Large insertion test passed" << std::endl; }
     else { std::cout << "#Test " << loctest << ": Large insertion test failed" << std::endl; testerr++; }
@@ -581,6 +702,9 @@ namespace ex2 {
 void Ex2Tests(uint& loctestnum, uint& loctesterr) {
   std::cout << endl << "----------~*~#~*~ Ex2Tests ~*~#~*~----------" << endl;
   
+  ex2::TestConstructors(loctestnum, loctesterr);
+  ex2::TestComparison(loctestnum, loctesterr);
+  ex2::TestAssignment(loctestnum, loctesterr);
   ex2::TestLargeIterator(loctestnum, loctesterr);
   ex2::TestEmptyTree(loctestnum, loctesterr);
   ex2::TestDuplicateInsertion(loctestnum, loctesterr);
@@ -621,6 +745,72 @@ namespace ex3 {
 
     if (tst) { std::cout << "#Test " << loctest << ": Constructors test passed" << std::endl; }
     else { std::cout << "#Test " << loctest << ": Constructors test failed" << std::endl; testerr++; }
+  }
+
+  void TestAssignment(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::List<int> lst;
+      lasd::HashTableClsAdr<int> ht2(lst);
+      lasd::HashTableOpnAdr<int> htop2(lst);
+      lasd::HashTableClsAdr<int> ht = ht2;
+      lasd::HashTableOpnAdr<int> htop = htop2;
+
+      lasd::HashTableClsAdr<int> ht3 = std::move(ht);
+      lasd::HashTableOpnAdr<int> htop3 = std::move(htop);
+      tst = true;
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Assignment test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Assignment test failed" << std::endl; testerr++; }
+  }
+
+  void TestComparison(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::Vector<int> vec;
+      lasd::List<int> lst;
+      lasd::HashTableClsAdr<int> ht(vec);
+      lasd::HashTableClsAdr<int> ht2(lst);
+
+      if (ht == ht2) { tst = true; } else { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::Vector<int> vec;
+      lasd::List<int> lst;
+      lasd::HashTableOpnAdr<int> htop(vec);
+      lasd::HashTableOpnAdr<int> htop2(lst);
+
+      if (htop == htop2) { tst = true; } else { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::Vector<int> vec(10);
+      lasd::List<int> lst;
+      for (int i = 0; i < 10; i++) { vec[i] = i; lst.InsertAtBack(i); }
+      lasd::HashTableClsAdr<int> ht(vec);
+      lasd::HashTableClsAdr<int> ht2(lst);
+
+      if (ht == ht2) { tst = true; } else { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::Vector<int> vec(10);
+      lasd::List<int> lst;
+      for (int i = 0; i < 10; i++) { vec[i] = i; lst.InsertAtBack(i); }
+      lasd::HashTableOpnAdr<int> htop(vec);
+      lasd::HashTableOpnAdr<int> htop2(lst);
+
+      if (htop == htop2) { tst = true; } else { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Comparison test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Comparison test failed" << std::endl; testerr++; }
   }
 
   // Tests creation of an empty table and a table with 1 element
@@ -814,6 +1004,8 @@ void Ex3Tests(uint &loctestnum, uint &loctesterr) {
   std::cout << endl << "----------~*~#~*~ Ex3Tests ~*~#~*~----------" << endl;
 
   ex3::TestConstructors(loctestnum, loctesterr);
+  ex3::TestComparison(loctestnum, loctesterr);
+  ex3::TestAssignment(loctestnum, loctesterr);
   ex3::TestCreationTable(loctestnum, loctesterr);
   ex3::TestCollisions(loctestnum, loctesterr);
   ex3::TestRemoval(loctestnum, loctesterr);

@@ -55,6 +55,8 @@ private:
 
 protected:
 
+  using Iterator<Data>::operator*;
+
 public:
 
   // Destructor
