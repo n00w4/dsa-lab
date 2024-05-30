@@ -473,7 +473,7 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-  BTPostOrderIterator(const BTPostOrderIterator& iter) : root(iter.root), stack(iter.stack), last(iter.last) {};
+  BTPostOrderIterator(const BTPostOrderIterator& iter) : root(iter.root), last(iter.last), stack(iter.stack) {};
 
   // Move constructor
   BTPostOrderIterator(BTPostOrderIterator&& iter) noexcept {

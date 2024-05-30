@@ -422,6 +422,42 @@ namespace ex2 {
 
     try {
       lasd::BinaryTreeLnk<int> btl1;
+      lasd::BTPreOrderIterator<int> it(btl1);
+      lasd::BTPreOrderIterator<int> it2 = it;
+      lasd::BTPreOrderMutableIterator<int> it3(btl1);
+      lasd::BTPreOrderMutableIterator<int> it4 = it3;
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BinaryTreeVec<int> btv1;
+      lasd::BTPostOrderIterator<int> it(btv1);
+      lasd::BTPostOrderIterator<int> it2 = it;
+      lasd::BTPostOrderMutableIterator<int> it3(btv1);
+      lasd::BTPostOrderMutableIterator<int> it4 = it3;
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BinaryTreeLnk<int> btl;
+      lasd::BTInOrderIterator<int> it(btl);
+      lasd::BTInOrderIterator<int> it2 = it;
+      lasd::BTInOrderMutableIterator<int> it3(btl);
+      lasd::BTInOrderMutableIterator<int> it4 = it3;
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BinaryTreeLnk<int> btl1;
+      lasd::BTBreadthIterator<int> it(btl1);
+      lasd::BTBreadthIterator<int> it2 = it;
+      lasd::BTBreadthMutableIterator<int> it3(btl1);
+      lasd::BTBreadthMutableIterator<int> it4 = it3;
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BinaryTreeLnk<int> btl1;
       lasd::BinaryTreeLnk<int> btl2;
       btl1 = std::move(btl2);
       tst = true;
@@ -438,6 +474,42 @@ namespace ex2 {
       lasd::BST<int> bst1;
       lasd::BST<int> bst2;
       bst1 = std::move(bst2);
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BinaryTreeLnk<int> btl1;
+      lasd::BTPreOrderIterator<int> it(btl1);
+      lasd::BTPreOrderIterator<int> it2 = std::move(it);
+      lasd::BTPreOrderMutableIterator<int> it3(btl1);
+      lasd::BTPreOrderMutableIterator<int> it4 = std::move(it3);
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BinaryTreeVec<int> btv1;
+      lasd::BTPostOrderIterator<int> it(btv1);
+      lasd::BTPostOrderIterator<int> it2 = std::move(it);
+      lasd::BTPostOrderMutableIterator<int> it3(btv1);
+      lasd::BTPostOrderMutableIterator<int> it4 = std::move(it3);
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BinaryTreeLnk<int> btl;
+      lasd::BTInOrderIterator<int> it(btl);
+      lasd::BTInOrderIterator<int> it2 = std::move(it);
+      lasd::BTInOrderMutableIterator<int> it3(btl);
+      lasd::BTInOrderMutableIterator<int> it4 = std::move(it3);
+      tst = true;
+    } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    try {
+      lasd::BinaryTreeLnk<int> btl1;
+      lasd::BTBreadthIterator<int> it(btl1);
+      lasd::BTBreadthIterator<int> it2 = std::move(it);
+      lasd::BTBreadthMutableIterator<int> it3(btl1);
+      lasd::BTBreadthMutableIterator<int> it4 = std::move(it3);
       tst = true;
     } catch (const std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
 
