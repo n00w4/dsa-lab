@@ -563,7 +563,7 @@ namespace ex2 {
       for (ulong i = 0; i <= lst.Size(); i++) {
         ++it;
       }
-    } catch (const std::out_of_range& e) { tst = true; }
+    } catch (const std::out_of_range& e) { tst = true; std::cout << e.what() << std::endl; } // error should be catched
 
     if (tst) { std::cout << "#Test " << loctest << ": Large iterator test passed" << std::endl; }
     else { std::cout << "#Test " << loctest << ": Large iterator test failed" << std::endl; }
@@ -699,7 +699,7 @@ namespace ex2 {
 
   // Tests successor and predecessor in BST
   void TestSuccessorPredecessor(uint &loctest, uint &testerr) {
-    bool tst = true;
+    bool tst = false;
     loctest++;
 
     lasd::List<int> lst;
@@ -714,14 +714,39 @@ namespace ex2 {
     lasd::BST<int> bst(lst);
 
     try {
+      (bst.Successor(5) == 10) ? tst = true : testerr++;
       (bst.Successor(10) == 15) ? tst = true : testerr++;
       (bst.Predecessor(35) == 30) ? tst = true : testerr++;
+      (bst.Predecessor(30) == 25) ? tst = true : testerr++;
       bst.InOrderTraverse(&TraversePrint<int>);
       std::cout << std::endl;
-    } catch (std::exception&) { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
 
     if (tst) { std::cout << "#Test " << loctest << ": Successor and Predecessor test passed" << std::endl; }
     else { std::cout << "#Test " << loctest << ": Successor and Predecessor test failed" << std::endl; }
+  }
+
+  void TestMaxMin(uint &loctest, uint &testerr) {
+    bool tst = false;
+    loctest++;
+
+    try {
+      lasd::List<int> lst;
+      lst.InsertAtBack(20);
+      lst.InsertAtBack(10);
+      lst.InsertAtBack(30);
+      lst.InsertAtBack(5);
+      lst.InsertAtBack(15);
+      lst.InsertAtBack(25);
+      lst.InsertAtBack(35);
+
+      lasd::BST<int> bst(lst);
+      (bst.Max() == 35) ? tst = true : testerr++;
+      (bst.Min() == 5) ? tst = true : testerr++;
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
+
+    if (tst) { std::cout << "#Test " << loctest << ": Max and Min test passed" << std::endl; }
+    else { std::cout << "#Test " << loctest << ": Max and Min test failed" << std::endl; }
   }
 
   // Tests large insertion in binary trees
@@ -744,7 +769,7 @@ namespace ex2 {
       }
       std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
       std::cout << "BinaryTreeLnk of " << numElements << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
-    } catch (std::exception& e) { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
 
     try {
       std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
@@ -754,7 +779,7 @@ namespace ex2 {
       }
       std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
       std::cout << "BinaryTreeVec of " << numElements << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
-    } catch (std::exception& e) { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
 
     try {
       std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
@@ -764,7 +789,7 @@ namespace ex2 {
       }
       std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
       std::cout << "BST of " << numElements << " elements created in: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
-    } catch (std::exception& e) { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
 
     if (tst) { std::cout << "#Test " << loctest << ": Large insertion test passed" << std::endl; }
     else { std::cout << "#Test " << loctest << ": Large insertion test failed" << std::endl; testerr++; }
@@ -784,6 +809,7 @@ void Ex2Tests(uint& loctestnum, uint& loctesterr) {
   ex2::TestRootRemoval(loctestnum, loctesterr);
   ex2::TestDescendingInsertion(loctestnum, loctesterr);
   ex2::TestSuccessorPredecessor(loctestnum, loctesterr);
+  ex2::TestMaxMin(loctestnum, loctesterr);
   ex2::TestLargeInsertion(loctestnum, loctesterr);
   
   std::cout << "----------End of Ex2Tests!---------- " << "Errors/Tests: " << "(" << loctesterr << "/" << loctestnum << ") " << endl;
@@ -996,7 +1022,7 @@ namespace ex3 {
         if (ht.Exists(i)) { tst = true; }
         else { tst = false; break; }
       }
-    } catch (std::exception& e) { tst = false; }
+    } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
 
     try {
       lasd::List<int> list;
