@@ -15,7 +15,7 @@ BST<Data>::BST(const TraversableContainer<Data>& tc) {
 
 // A bst obtained from a MappableContainer
 template <typename Data>
-BST<Data>::BST(MappableContainer<Data>&& mc) {
+BST<Data>::BST(MappableContainer<Data>&& mc) noexcept {
     mc.Map([this](const Data& data) {
         Insert(std::move(data));
     });

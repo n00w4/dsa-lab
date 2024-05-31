@@ -34,7 +34,7 @@ public:
   // A bst obtained from a TraversableContainer
   BST(const TraversableContainer<Data>&);
   // A bst obtained from a MappableContainer
-  BST(MappableContainer<Data>&&);
+  BST(MappableContainer<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
