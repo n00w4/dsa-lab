@@ -160,12 +160,12 @@ protected:
   const NodeLnk* const& FindPointerTo(const NodeLnk*const&, const Data&) const noexcept;
 
   // FindPointerToPredecessor(argument) specifiers; // Both mutable & unmutable versions
-  NodeLnk** FindPointerToPredecessor(NodeLnk*&, const Data&) noexcept;
-  const NodeLnk* const* FindPointerToPredecessor(const NodeLnk*const&, const Data&) const noexcept;
+  NodeLnk*& FindPointerToPredecessor(NodeLnk*&, const Data&) noexcept;
+  const NodeLnk* const& FindPointerToPredecessor(const NodeLnk*const&, const Data&) const noexcept;
   
   // FindPointerToSuccessor(argument) specifiers; // Both mutable & unmutable versions
-  NodeLnk** FindPointerToSuccessor(NodeLnk*&, const Data&) noexcept;
-  const NodeLnk* const* FindPointerToSuccessor(const NodeLnk*const&, const Data&) const noexcept;
+  NodeLnk*& FindPointerToSuccessor(NodeLnk*&, const Data&) noexcept;
+  const NodeLnk* const& FindPointerToSuccessor(const NodeLnk*const&, const Data&) const noexcept;
 
 };
 
