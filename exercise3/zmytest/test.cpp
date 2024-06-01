@@ -720,6 +720,11 @@ namespace ex2 {
       (bst.Predecessor(30) == 25) ? tst = true : testerr++;
       bst.InOrderTraverse(&TraversePrint<int>);
       std::cout << std::endl;
+      std::cout << "Testing RemovePredecessor and RemoveSuccessor..." << std::endl;
+      bst.RemovePredecessor(30);
+      bst.RemoveSuccessor(5);
+      bst.InOrderTraverse(&TraversePrint<int>);
+      std::cout << std::endl;
     } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
 
     if (tst) { std::cout << "#Test " << loctest << ": Successor and Predecessor test passed" << std::endl; }
@@ -743,6 +748,9 @@ namespace ex2 {
       lasd::BST<int> bst(lst);
       (bst.Max() == 35) ? tst = true : testerr++;
       (bst.Min() == 5) ? tst = true : testerr++;
+      std::cout << "Testing RemoveMax and RemoveMin..." << std::endl;
+      bst.RemoveMax();
+      bst.RemoveMin();
     } catch (std::exception& e) { tst = false; std::cout << e.what() << std::endl; }
 
     if (tst) { std::cout << "#Test " << loctest << ": Max and Min test passed" << std::endl; }
